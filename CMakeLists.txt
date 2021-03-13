@@ -17,10 +17,16 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 set(PROJECT_SOURCES
         src/main.cpp
         src/mainwindow.cpp
-        src/clickhandling.cpp
+        src/utils/copy_path.cpp
+        src/utils/dir_size.cpp
+        src/utils/navigation.cpp
+        src/utils/search_filter.cpp
         include/mainwindow.h
         include/global.h
-        include/clickhandling.h
+        include/utils/copy_path.h
+        include/utils/dir_size.h
+        include/utils/navigation.h
+        include/utils/search_filter.h
         ui/mainwindow.ui
 )
 

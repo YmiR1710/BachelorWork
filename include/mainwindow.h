@@ -12,7 +12,11 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include "QDebug"
+#include "./../ui/ui_mainwindow.h"
+#include "./include/utils/copy_path.h"
+#include "./include/utils/dir_size.h"
 #include "./include/global.h"
+#include "./include/utils/navigation.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -28,7 +32,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_listView_1_doubleClicked(const QModelIndex &index);
+    void on_listView_doubleClicked(const QModelIndex &index);
     void click(const QModelIndex &index);
     void show_hide_search_1();
     void show_hide_search_2();
@@ -49,9 +53,5 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QFileSystemModel *model;
-    QFileSystemModel *model_2;
-    qint64 dirSize(QString dirPath);
-    void copyPath(QString src, QString dst);
 };
 #endif
