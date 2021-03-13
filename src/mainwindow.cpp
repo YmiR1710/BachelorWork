@@ -198,7 +198,6 @@ void MainWindow::delete_file(){
 }
 
 void MainWindow::rename_file(){
-    int counter = 1;
     bool result;
     QFileInfo info = model_1->fileInfo(chosenFile);
     QString name = info.baseName();
@@ -221,35 +220,9 @@ void MainWindow::rename_file(){
 
     if(result){
         if(info.isDir()){
-            QDir dir(info.absoluteFilePath());
-            QString new_path = info.absolutePath();
-            new_path.append("/");
-            new_path.append(text);
-            while(!dir.rename(info.absoluteFilePath(), new_path)){
-                new_path = info.absolutePath();
-                new_path.append("/");
-                QStringList text_list = text.split('.');
-                text_list[0].append("(");
-                text_list[0].append(QString::number(counter));
-                text_list[0].append(")");
-                new_path.append(text_list.join("."));
-                counter++;
-            }
+            rename_unit(info, text, true);
         }else{
-            QFile file(info.absoluteFilePath());
-            QString new_path = info.absolutePath();
-            new_path.append("/");
-            new_path.append(text);
-            while(!file.rename(new_path)){
-                new_path = info.absolutePath();
-                new_path.append("/");
-                QStringList text_list = text.split('.');
-                text_list[0].append("(");
-                text_list[0].append(QString::number(counter));
-                text_list[0].append(")");
-                new_path.append(text_list.join("."));
-                counter++;
-            }
+            rename_unit(info, text, false);
         }
     }
 }
@@ -330,57 +303,17 @@ void MainWindow::paste_file(){
         QFileInfo copy_info = model_1->fileInfo(c_file);
         QFileInfo chosen_info = model_1->fileInfo(chosenFile);
         if(copy_info.isDir()){
-            QDir dir_to_copy(copy_info.absoluteFilePath());
-            if(dir_to_copy.exists()){
-                QString new_path = chosen_info.absolutePath();
-                QString src_path = copy_info.absoluteFilePath();
-                new_path.append("/");
-                new_path.append(copy_info.baseName());
-                if(!copy_info.completeSuffix().isEmpty()){
-                    new_path.append(".");
-                }
-                new_path.append(copy_info.completeSuffix());
-                copyPath(src_path, new_path);
-            }
+            paste_unit(copy_info, chosen_info, true);
         }else{
-            QFile file_to_copy(copy_info.absoluteFilePath());
-            if(file_to_copy.exists()){
-                QString new_path = chosen_info.absolutePath();
-                new_path.append("/");
-                new_path.append(copy_info.baseName());
-                if(copy_info.completeSuffix().size() != 0){
-                    new_path.append(".");
-                    new_path.append(copy_info.completeSuffix());
-                }
-                int counter = 1;
-                while(!file_to_copy.copy(new_path)){
-                    new_path = chosen_info.absolutePath();
-                    new_path.append("/");
-                    QString text = copy_info.baseName();
-                    if(copy_info.completeSuffix().size() != 0){
-                        text.append(".");
-                        text.append(copy_info.completeSuffix());
-                    }
-                    QStringList text_list = text.split('.');
-                    text_list[0].append("(");
-                    text_list[0].append(QString::number(counter));
-                    text_list[0].append(")");
-                    new_path.append(text_list.join("."));
-                    counter++;
-                }
-            }
+            paste_unit(copy_info, chosen_info, false);
         }
         if(to_cut){
             if(model_1->fileInfo(c_file).isDir()){
                 QDir dir(model_1->fileInfo(c_file).absoluteFilePath());
-                this->setCursor(QCursor(Qt::WaitCursor));
                 dir.removeRecursively();
-                this->setCursor(QCursor(Qt::ArrowCursor));
             }else{
                 QFile file(model_1->fileInfo(c_file).absoluteFilePath());
-                this->setCursor(QCursor(Qt::WaitCursor));
                 file.remove();
-                this->setCursor(QCursor(Qt::ArrowCursor));
             }
         }
     }
@@ -389,71 +322,22 @@ void MainWindow::paste_file(){
 }
 
 void MainWindow::create_file(){
-    int counter = 1;
     bool result;
     QString text = QInputDialog::getText(this, tr(""),
                                          tr("New file:"), QLineEdit::Normal,
                                          "", &result);
     if(result){
-        QString path = model_1->fileInfo(chosenFile).absolutePath();
-        path.append("/");
-        path.append(text);
-        QFile newFile(path);
-        if(newFile.exists()){
-            while(true){
-                path = model_1->fileInfo(chosenFile).absolutePath();
-                path.append("/");
-                QStringList text_list = text.split('.');
-                text_list[0].append("(");
-                text_list[0].append(QString::number(counter));
-                text_list[0].append(")");
-                path.append(text_list.join("."));
-                QFile newFile(path);
-                if(!newFile.exists()){
-                    newFile.open(QFile::WriteOnly);
-                    break;
-                }
-                counter++;
-            }
-        }
-        else{
-            newFile.open(QFile::WriteOnly);
-        }
-        newFile.close();
+        create_unit(text, false);
     }
 }
 
 void MainWindow::create_folder(){
-    int counter = 1;
     bool result;
     QString text = QInputDialog::getText(this, tr(""),
                                          tr("New folder:"), QLineEdit::Normal,
                                          "", &result);
     if(result){
-        QString path = model_1->fileInfo(chosenFile).absolutePath();
-        path.append("/");
-        path.append(text);
-        QDir newFolder(path);
-        if(newFolder.exists()){
-            while(true){
-                path = model_1->fileInfo(chosenFile).absolutePath();
-                path.append("/");
-                QStringList text_list = text.split('.');
-                text_list[0].append("(");
-                text_list[0].append(QString::number(counter));
-                text_list[0].append(")");
-                path.append(text_list.join("."));
-                QDir newFolder(path);
-                if(!newFolder.exists()){
-                    newFolder.mkpath(".");
-                    break;
-                }
-                counter++;
-            }
-        }
-        else{
-            newFolder.mkpath(".");
-        }
+        create_unit(text, true);
     }
 }
 
@@ -465,7 +349,9 @@ void MainWindow::customMenuRequested(const QPoint &pos){
     foreach(const QModelIndex &indexx, list){
         chosenFiles.append(indexx);
     }
-    if(!(model_1->fileInfo(index).completeBaseName() == "." || model_1->fileInfo(index).completeBaseName() == "")){
+    qDebug() << model_1->fileInfo(index).completeBaseName();
+    qDebug() << get_filename(model_1->fileInfo(index).absoluteFilePath());
+    if(!(model_1->fileInfo(index).completeBaseName() == "." || get_filename(model_1->fileInfo(index).absoluteFilePath()) == "")){
         if(chosenFiles.size() >= 2){
             chosenFile = index;
             QMenu *menu=new QMenu(this);
@@ -491,7 +377,6 @@ void MainWindow::customMenuRequested(const QPoint &pos){
             connect(copy_action, SIGNAL(triggered()), this, SLOT(copy_file()));
             connect(cut_action, SIGNAL(triggered()), this, SLOT(cut_file()));
             connect(paste_action, SIGNAL(triggered()), this, SLOT(paste_file()));
-            connect(compress_action, SIGNAL(triggered()), this, SLOT(compress_files()));
             connect(delete_action, SIGNAL(triggered()), this, SLOT(delete_file()));
             menu->popup(listView->viewport()->mapToGlobal(pos));
         }
@@ -576,7 +461,6 @@ void MainWindow::close_search(){
     model_1->setNameFilters(filters);
     model_2->setNameFilters(filters);
 }
-
 
 void MainWindow::open_file(){
     this->setCursor(QCursor(Qt::WaitCursor));

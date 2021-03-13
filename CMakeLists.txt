@@ -21,12 +21,20 @@ set(PROJECT_SOURCES
         src/utils/dir_size.cpp
         src/utils/navigation.cpp
         src/utils/search_filter.cpp
+        src/utils/create_unit.cpp
+        src/utils/filename.cpp
+        src/utils/rename_unit.cpp
+        src/utils/copypaste.cpp
         include/mainwindow.h
         include/global.h
         include/utils/copy_path.h
         include/utils/dir_size.h
         include/utils/navigation.h
         include/utils/search_filter.h
+        include/utils/create_unit.h
+        include/utils/filename.h
+        include/utils/rename_unit.h
+        include/utils/copypaste.h
         ui/mainwindow.ui
 )
 

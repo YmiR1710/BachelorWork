@@ -18,6 +18,10 @@
 #include "./include/global.h"
 #include "./include/utils/navigation.h"
 #include "./include/utils/search_filter.h"
+#include "./include/utils/create_unit.h"
+#include "./include/utils/filename.h"
+#include "./include/utils/rename_unit.h"
+#include "./include/utils/copypaste.h"
 
 
 QT_BEGIN_NAMESPACE
