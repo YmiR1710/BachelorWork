@@ -562,21 +562,10 @@ void MainWindow::lineEditEnter(){
 void MainWindow::searchEnter(){
     QLineEdit* line = (QLineEdit*)sender();
     QString item_name = line->text();
-    QStringList filters;
-    QString request = "*";
-    request.append(item_name);
-    request.append("*");
-    filters << request;
-    filters << ".";
-    filters << "..";
     if(line == ui->search_1){
-        model_1->setNameFilters(filters);
-        model_1->setNameFilterDisables(false);
-        ui->listView_1->setRootIndex(model_1->index(ui->lineEdit_1->text()));
+        search_filter(item_name, ui->listView_1, ui->lineEdit_1, model_1);
     } else if(line == ui->search_2){
-        model_2->setNameFilters(filters);
-        model_2->setNameFilterDisables(false);
-        ui->listView_2->setRootIndex(model_2->index(ui->lineEdit_2->text()));
+        search_filter(item_name, ui->listView_2, ui->lineEdit_2, model_2);
     }
 }
 

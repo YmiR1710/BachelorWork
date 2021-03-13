@@ -17,6 +17,7 @@
 #include "./include/utils/dir_size.h"
 #include "./include/global.h"
 #include "./include/utils/navigation.h"
+#include "./include/utils/search_filter.h"
 
 
 QT_BEGIN_NAMESPACE
