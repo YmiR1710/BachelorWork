@@ -106,94 +106,21 @@ void MainWindow::show_hide_search_2(){
 }
 
 void MainWindow::delete_file(){
-    if(chosenFiles.size()>=2){
-        QMessageBox::StandardButton reply;
-        QString question = "Are you sure you want to delete " + QString::number(chosenFiles.size()) +
-                " files?";
-        reply = QMessageBox::question(this, "", question,
-                                      QMessageBox::Yes|QMessageBox::No);
-        for(auto &c_file: chosenFiles){
-            if(model_1->fileInfo(c_file).isDir()){
-                QDir dir(model_1->fileInfo(c_file).absoluteFilePath());
-                if (reply == QMessageBox::Yes) {
-                    this->setCursor(QCursor(Qt::WaitCursor));
-                    QFileInfo f(dir.absolutePath());
-                    QString own = f.owner();
-                    if (f.permission(QFile::WriteUser) && own != "root"){
-                        dir.removeRecursively();
-                    }else{
-                        QMessageBox messageBox;
-                        messageBox.setText("No permission");
-                        messageBox.setFixedSize(500,200);
-                        messageBox.exec();
-                    }
-
-                    this->setCursor(QCursor(Qt::ArrowCursor));
-                }
-            }else{
-                QFile file(model_1->fileInfo(c_file).absoluteFilePath());
-                if (reply == QMessageBox::Yes) {
-                    this->setCursor(QCursor(Qt::WaitCursor));
-                    QFileInfo f(file);
-                    QString own = f.owner();
-                    if (f.permission(QFile::WriteUser) && own != "root"){
-                        file.remove();
-                    }else{
-                        QMessageBox messageBox;
-                        messageBox.setText("No permission");
-                        messageBox.setFixedSize(500,200);
-                        messageBox.exec();
-                    }
-                    this->setCursor(QCursor(Qt::ArrowCursor));
-                }
-            }
-        }
-    }
-    else{
-        QMessageBox::StandardButton reply;
-        QString question = "Are you sure you want to delete ";
-        question.append(model_1->fileInfo(chosenFile).baseName());
-        if(!(model_1->fileInfo(chosenFile).completeSuffix() == "")){
-            question.append(".");
-        }
-        question.append(model_1->fileInfo(chosenFile).completeSuffix());
-        question.append("?");
-        reply = QMessageBox::question(this, "", question,
-                                      QMessageBox::Yes|QMessageBox::No);
-        if(model_1->fileInfo(chosenFile).isDir()){
-            QDir dir(model_1->fileInfo(chosenFile).absoluteFilePath());
-            if (reply == QMessageBox::Yes) {
-                this->setCursor(QCursor(Qt::WaitCursor));
-                QFileInfo f(dir.absolutePath());
-                QString own = f.owner();
-                if (f.permission(QFile::WriteUser) && own != "root"){
-                    dir.removeRecursively();
-                }else{
-                    QMessageBox messageBox;
-                    messageBox.setText("No permission");
-                    messageBox.setFixedSize(500,200);
-                    messageBox.exec();
-                }
-                this->setCursor(QCursor(Qt::ArrowCursor));
-            }
+    QMessageBox::StandardButton reply;
+    QString question = "Are you sure you want to delete " + QString::number(chosenFiles.size()) +
+            " files?";
+    reply = QMessageBox::question(this, "", question,
+                                  QMessageBox::Yes|QMessageBox::No);
+    this->setCursor(QCursor(Qt::WaitCursor));
+    for(auto &c_file: chosenFiles){
+        QString absolutePath = model_1->fileInfo(c_file).absoluteFilePath();
+        if(model_1->fileInfo(c_file).isDir()){
+            delete_unit(absolutePath, reply, true);
         }else{
-            QFile file(model_1->fileInfo(chosenFile).absoluteFilePath());
-            if (reply == QMessageBox::Yes) {
-                this->setCursor(QCursor(Qt::WaitCursor));
-                QFileInfo f(file);
-                QString own = f.owner();
-                if (f.permission(QFile::WriteUser) && own != "root"){
-                    file.remove();
-                }else{
-                    QMessageBox messageBox;
-                    messageBox.setText("No permission");
-                    messageBox.setFixedSize(500,200);
-                    messageBox.exec();
-                }
-                this->setCursor(QCursor(Qt::ArrowCursor));
-            }
+            delete_unit(absolutePath, reply, false);
         }
     }
+    this->setCursor(QCursor(Qt::ArrowCursor));
     chosenFiles.clear();
 }
 
@@ -368,8 +295,6 @@ void MainWindow::customMenuRequested(const QPoint &pos){
             QAction *paste_action = new QAction("Paste", this);
             menu->addAction(paste_action);
             paste_action->setObjectName("paste_action");
-            QAction *compress_action = new QAction("Archive", this);
-            menu->addAction(compress_action);
             QAction *delete_action = new QAction("Delete", this);
             menu->addAction(delete_action);
             connect(create_file_action, SIGNAL(triggered()), this, SLOT(create_file()));
@@ -402,8 +327,6 @@ void MainWindow::customMenuRequested(const QPoint &pos){
             QAction *paste_action = new QAction("Paste", this);
             menu->addAction(paste_action);
             paste_action->setObjectName("paste_action");
-            QAction *compress_action = new QAction("Archive", this);
-            menu->addAction(compress_action);
             QAction *delete_action = new QAction("Delete", this);
             menu->addAction(delete_action);
             QAction *rename_action = new QAction("Rename", this);

@@ -22,6 +22,7 @@
 #include "./include/utils/filename.h"
 #include "./include/utils/rename_unit.h"
 #include "./include/utils/copypaste.h"
+#include "./include/utils/delete_unit.h"
 
 
 QT_BEGIN_NAMESPACE

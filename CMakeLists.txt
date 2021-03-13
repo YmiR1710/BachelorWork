@@ -25,6 +25,7 @@ set(PROJECT_SOURCES
         src/utils/filename.cpp
         src/utils/rename_unit.cpp
         src/utils/copypaste.cpp
+        src/utils/delete_unit.cpp
         include/mainwindow.h
         include/global.h
         include/utils/copy_path.h
@@ -35,6 +36,7 @@ set(PROJECT_SOURCES
         include/utils/filename.h
         include/utils/rename_unit.h
         include/utils/copypaste.h
+        include/utils/delete_unit.h
         ui/mainwindow.ui
 )
 
