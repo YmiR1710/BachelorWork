@@ -10,7 +10,6 @@ QString mPath = "/";
 QString mPath = "/";
 #endif
 
-
 QModelIndex chosenFile;
 QModelIndex copiedFile;
 QList<QModelIndex> chosenFiles;
@@ -18,6 +17,8 @@ QList<QModelIndex> copiedFiles;
 bool to_cut = false;
 QFileSystemModel *model_1;
 QFileSystemModel *model_2;
+qint64 directorySize;
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,7 +35,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lineEdit_2->setText(mPath);
     ui->listView_1->setModel(model_1);
     ui->listView_2->setModel(model_2);
-
     QModelIndex idx = model_1->index(model_1->rootPath());
     QModelIndex idx_2 = model_2->index(model_2->rootPath());
     ui->listView_1->setRootIndex(idx);
@@ -61,8 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
     new QShortcut(QKeySequence(Qt::Key_Escape), this, SLOT(close_search()));
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow(){
     delete ui;
 }
 
@@ -137,8 +136,7 @@ void MainWindow::rename_file(){
         text = QInputDialog::getText(this, tr(""),
                                              tr("New name:"), QLineEdit::Normal,
                                              name, &result);
-    } else
-    {
+    } else{
         QMessageBox msg;
         msg.setText("No permission");
         msg.setFixedSize(500,200);
@@ -157,22 +155,21 @@ void MainWindow::rename_file(){
 void MainWindow::get_properties(){
         this->setCursor(QCursor(Qt::WaitCursor));
         QFileInfo info = model_1->fileInfo(chosenFile);
-        QMessageBox properties_window(this);
-        properties_window.setWindowTitle("Properties");
-        properties_window.setStandardButtons(QMessageBox::Close);
-        QString properties_text;
-        QStringList properties_list = {"Name: ", "Type: ", "Size: ", "Parent folder: ",
-                                       "Group: ", "Owner: ", "Created: ", "Last modified: "};
-        properties_text.append(properties_list[0]);
+        QDialog* widget = new QDialog(this);
+        QVBoxLayout* layout = new QVBoxLayout(widget);
+        PropertiesWindow *properties_window = new PropertiesWindow(widget);
+        properties_window->setReadOnly(true);
+        QFont sansFont("Times", 10);
+        properties_window->setCurrentFont(sansFont);
+        widget->setWindowTitle("Properties");
+        Properties *properties = new Properties();
         QString name = info.baseName();
         if(!(info.completeSuffix() == "")){
             name.append(".");
         }
         name.append(info.completeSuffix());
-        properties_text.append(name);
-        properties_text.append("\n");
+        properties->setName(name);
         QString type;
-        properties_text.append(properties_list[1]);
         if(info.isDir()){
             type = "directory";
         }else if(info.isExecutable()){
@@ -184,35 +181,28 @@ void MainWindow::get_properties(){
         }else{
             type = "file";
         }
-        properties_text.append(type);
-        properties_text.append("\n");
-        properties_text.append(properties_list[2]);
+        properties->setType(type);
         qint64 size;
         if(info.isDir()){
-            size = dirSize(info.absoluteFilePath());
+            directorySize = 0;
+            connect(properties_window, SIGNAL(changeTextSignal(QString)), properties_window, SLOT(changeTextSlot(QString)));
+            std::thread worker(dirSizeWrap, info.absoluteFilePath(), properties, properties_window);
+            worker.detach();
+            size = directorySize;
         }else{
-            size = info.size()/1000;
+            size = info.size();
         }
-        properties_text.append(QString::number(size));
-        properties_text.append(" kB");
-        properties_text.append("\n");
-        properties_text.append(properties_list[3]);
-        properties_text.append(info.absolutePath());
-        properties_text.append("\n");
-        properties_text.append(properties_list[4]);
-        properties_text.append(info.group());
-        properties_text.append("\n");
-        properties_text.append(properties_list[5]);
-        properties_text.append(info.owner());
-        properties_text.append("\n");
-        properties_text.append(properties_list[6]);
-        properties_text.append(info.lastModified().toString(Qt::SystemLocaleLongDate));
-        properties_text.append("\n");
-        properties_text.append(properties_list[7]);
-        properties_text.append(info.created().toString(Qt::SystemLocaleLongDate));
-        properties_window.setText(properties_text);
+        properties->setSize(formatSize(size));
+        properties->setParentFolder(info.absolutePath());
+        properties->setGroup(info.group());
+        properties->setOwner(info.owner());
+        properties->setLastModified(info.lastModified().toString(Qt::SystemLocaleLongDate));
+        properties->setCreated(info.created().toString(Qt::SystemLocaleLongDate));
+        properties_window->setText(properties->toString());
         this->setCursor(QCursor(Qt::ArrowCursor));
-        properties_window.exec();
+        layout->addWidget(properties_window, 0, 0);
+        widget->setLayout(layout);
+        widget->exec();
     }
 
 void MainWindow::copy_file(){

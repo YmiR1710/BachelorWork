@@ -17,6 +17,7 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 set(PROJECT_SOURCES
         src/main.cpp
         src/mainwindow.cpp
+        src/properties.cpp
         src/utils/copy_path.cpp
         src/utils/dir_size.cpp
         src/utils/navigation.cpp
@@ -26,6 +27,7 @@ set(PROJECT_SOURCES
         src/utils/rename_unit.cpp
         src/utils/copypaste.cpp
         src/utils/delete_unit.cpp
+        src/propertieswindow.cpp
         include/mainwindow.h
         include/global.h
         include/utils/copy_path.h
@@ -37,6 +39,8 @@ set(PROJECT_SOURCES
         include/utils/rename_unit.h
         include/utils/copypaste.h
         include/utils/delete_unit.h
+        include/properties.h
+        include/propertieswindow.h
         ui/mainwindow.ui
 )
 

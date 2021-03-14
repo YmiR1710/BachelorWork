@@ -5,12 +5,14 @@
 #include <QDialog>
 #include <QFileSystemModel>
 #include <QMenuBar>
-#include <QMessageBox>
+#include <QFont>
 #include <QInputDialog>
 #include <QDateTime>
 #include <QShortcut>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QTextEdit>
+#include <thread>
 #include "QDebug"
 #include "./../ui/ui_mainwindow.h"
 #include "./include/utils/copy_path.h"
@@ -23,6 +25,8 @@
 #include "./include/utils/rename_unit.h"
 #include "./include/utils/copypaste.h"
 #include "./include/utils/delete_unit.h"
+#include "./include/properties.h"
+#include "./include/propertieswindow.h"
 
 
 QT_BEGIN_NAMESPACE
