@@ -59,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->listView_2->setSelectionMode(QAbstractItemView::ExtendedSelection);
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_C), this, SLOT(copy_file()));
     new QShortcut(QKeySequence(Qt::Key_Escape), this, SLOT(close_search()));
+//    new QShortcut(QKeySequence(Qt::Key_Delete), this, SLOT(delete_file())); TODO
 }
 
 MainWindow::~MainWindow(){
@@ -113,11 +114,7 @@ void MainWindow::delete_file(){
     this->setCursor(QCursor(Qt::WaitCursor));
     for(auto &c_file: chosenFiles){
         QString absolutePath = model_1->fileInfo(c_file).absoluteFilePath();
-        if(model_1->fileInfo(c_file).isDir()){
-            delete_unit(absolutePath, reply, true);
-        }else{
-            delete_unit(absolutePath, reply, false);
-        }
+        delete_unit(absolutePath, reply, model_1->fileInfo(c_file));
     }
     this->setCursor(QCursor(Qt::ArrowCursor));
     chosenFiles.clear();
@@ -153,57 +150,57 @@ void MainWindow::rename_file(){
 }
 
 void MainWindow::get_properties(){
-        this->setCursor(QCursor(Qt::WaitCursor));
-        QFileInfo info = model_1->fileInfo(chosenFile);
-        QDialog* widget = new QDialog(this);
-        QVBoxLayout* layout = new QVBoxLayout(widget);
-        PropertiesWindow *properties_window = new PropertiesWindow(widget);
-        properties_window->setReadOnly(true);
-        QFont sansFont("Times", 10);
-        properties_window->setCurrentFont(sansFont);
-        widget->setWindowTitle("Properties");
-        Properties *properties = new Properties();
-        QString name = info.baseName();
-        if(!(info.completeSuffix() == "")){
-            name.append(".");
-        }
-        name.append(info.completeSuffix());
-        properties->setName(name);
-        QString type;
-        if(info.isDir()){
-            type = "directory";
-        }else if(info.isExecutable()){
-            type = "executable";
-        }else if(info.isSymLink()){
-            type = "symbolic link";
-        }else if(info.isBundle()){
-            type = "bundle";
-        }else{
-            type = "file";
-        }
-        properties->setType(type);
-        qint64 size;
-        if(info.isDir()){
-            directorySize = 0;
-            connect(properties_window, SIGNAL(changeTextSignal(QString)), properties_window, SLOT(changeTextSlot(QString)));
-            std::thread worker(dirSizeWrap, info.absoluteFilePath(), properties, properties_window);
-            worker.detach();
-            size = directorySize;
-        }else{
-            size = info.size();
-        }
-        properties->setSize(formatSize(size));
-        properties->setParentFolder(info.absolutePath());
-        properties->setGroup(info.group());
-        properties->setOwner(info.owner());
-        properties->setLastModified(info.lastModified().toString(Qt::SystemLocaleLongDate));
-        properties->setCreated(info.created().toString(Qt::SystemLocaleLongDate));
-        properties_window->setText(properties->toString());
-        this->setCursor(QCursor(Qt::ArrowCursor));
-        layout->addWidget(properties_window, 0, 0);
-        widget->setLayout(layout);
-        widget->exec();
+    this->setCursor(QCursor(Qt::WaitCursor));
+    QFileInfo info = model_1->fileInfo(chosenFile);
+    QDialog* widget = new QDialog(this);
+    QVBoxLayout* layout = new QVBoxLayout(widget);
+    PropertiesWindow *properties_window = new PropertiesWindow(widget);
+    properties_window->setReadOnly(true);
+    QFont sansFont("Times", 10);
+    properties_window->setCurrentFont(sansFont);
+    widget->setWindowTitle("Properties");
+    Properties *properties = new Properties();
+    QString name = info.baseName();
+    if(!(info.completeSuffix() == "")){
+        name.append(".");
     }
+    name.append(info.completeSuffix());
+    properties->setName(name);
+    QString type;
+    if(info.isDir()){
+        type = "directory";
+    }else if(info.isExecutable()){
+        type = "executable";
+    }else if(info.isSymLink()){
+        type = "symbolic link";
+    }else if(info.isBundle()){
+        type = "bundle";
+    }else{
+        type = "file";
+    }
+    properties->setType(type);
+    qint64 size;
+    if(info.isDir()){
+        directorySize = 0;
+        connect(properties_window, SIGNAL(changeTextSignal(QString)), properties_window, SLOT(changeTextSlot(QString)));
+        std::thread worker(dirSizeWrap, info.absoluteFilePath(), properties, properties_window);
+        worker.detach();
+        size = directorySize;
+    }else{
+        size = info.size();
+    }
+    properties->setSize(formatSize(size));
+    properties->setParentFolder(info.absolutePath());
+    properties->setGroup(info.group());
+    properties->setOwner(info.owner());
+    properties->setLastModified(info.lastModified().toString(Qt::SystemLocaleLongDate));
+    properties->setCreated(info.created().toString(Qt::SystemLocaleLongDate));
+    properties_window->setText(properties->toString());
+    this->setCursor(QCursor(Qt::ArrowCursor));
+    layout->addWidget(properties_window, 0, 0);
+    widget->setLayout(layout);
+    widget->exec();
+}
 
 void MainWindow::copy_file(){
     copiedFiles = chosenFiles;
@@ -287,6 +284,9 @@ void MainWindow::customMenuRequested(const QPoint &pos){
             paste_action->setObjectName("paste_action");
             QAction *delete_action = new QAction("Delete", this);
             menu->addAction(delete_action);
+            QAction *shortcut_action = new QAction("Create shortcut", this);
+            menu->addAction(shortcut_action);
+            connect(shortcut_action, SIGNAL(triggered()), this, SLOT(create_shortcut()));
             connect(create_file_action, SIGNAL(triggered()), this, SLOT(create_file()));
             connect(create_folder_action, SIGNAL(triggered()), this, SLOT(create_folder()));
             connect(copy_action, SIGNAL(triggered()), this, SLOT(copy_file()));
@@ -321,6 +321,9 @@ void MainWindow::customMenuRequested(const QPoint &pos){
             menu->addAction(delete_action);
             QAction *rename_action = new QAction("Rename", this);
             menu->addAction(rename_action);
+            QAction *shortcut_action = new QAction("Create shortcut", this);
+            menu->addAction(shortcut_action);
+            connect(shortcut_action, SIGNAL(triggered()), this, SLOT(create_shortcut()));
             QAction *properties_action = new QAction("Properties", this);
             menu->addAction(properties_action);
             connect(create_file_action, SIGNAL(triggered()), this, SLOT(create_file()));
@@ -382,4 +385,12 @@ void MainWindow::open_file(){
     this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
-
+void MainWindow::create_shortcut(){
+    this->setCursor(QCursor(Qt::WaitCursor));
+    for(auto &c_file: chosenFiles){
+        QString absolutePath = model_1->fileInfo(c_file).absoluteFilePath();
+        QFile::link(absolutePath, absolutePath + " - Shortcut.lnk");
+    }
+    this->setCursor(QCursor(Qt::ArrowCursor));
+    chosenFiles.clear();
+}

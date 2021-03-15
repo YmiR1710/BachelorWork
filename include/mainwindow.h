@@ -59,6 +59,7 @@ private slots:
     void cut_file();
     void create_file();
     void create_folder();
+    void create_shortcut();
 
 
 private:
