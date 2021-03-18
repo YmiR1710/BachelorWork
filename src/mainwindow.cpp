@@ -49,8 +49,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->listView_1, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customMenuRequested(QPoint)));
     connect(ui->lineEdit_1, SIGNAL(returnPressed()), SLOT(lineEditEnter()));
     connect(ui->lineEdit_2, SIGNAL(returnPressed()), SLOT(lineEditEnter()));
-    connect(ui->search_button_1, SIGNAL (released()),this, SLOT (show_hide_search_1()));
-    connect(ui->search_button_2, SIGNAL (released()),this, SLOT (show_hide_search_2()));
+    connect(ui->search_button_1, SIGNAL (released()), this, SLOT (show_hide_search_1()));
+    connect(ui->search_button_2, SIGNAL (released()), this, SLOT (show_hide_search_2()));
     connect(ui->search_1, SIGNAL(returnPressed()), SLOT(searchEnter()));
     connect(ui->search_2, SIGNAL(returnPressed()), SLOT(searchEnter()));
     ui->listView_1->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -62,57 +62,57 @@ MainWindow::MainWindow(QWidget *parent)
 //    new QShortcut(QKeySequence(Qt::Key_Delete), this, SLOT(delete_file())); TODO
 }
 
-MainWindow::~MainWindow(){
+MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::click(const QModelIndex &index){
+void MainWindow::click(const QModelIndex &index) {
     chosenFile = index;
 }
 
 void MainWindow::on_listView_doubleClicked(const QModelIndex &index)
 {
     this->setCursor(QCursor(Qt::WaitCursor));
-    QListView* listView = (QListView*)sender();
+    QListView *listView = (QListView *)sender();
     QFileInfo fileInfo = model_1->fileInfo(index);
     if (fileInfo.isFile()) {
         QDesktopServices::openUrl(QUrl(fileInfo.absoluteFilePath().prepend("file:///")));
         this->setCursor(QCursor(Qt::ArrowCursor));
         return;
     }
-    if(listView == ui->listView_1){
+    if (listView == ui->listView_1) {
         open_folder(model_1, ui->listView_1, ui->lineEdit_1, fileInfo, index);
-    }else{
+    } else {
         open_folder(model_2, ui->listView_2, ui->lineEdit_2, fileInfo, index);
     }
 
     this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
-void MainWindow::show_hide_search_1(){
-    if(ui->search_1->isVisible()){
+void MainWindow::show_hide_search_1() {
+    if (ui->search_1->isVisible()) {
         ui->search_1->setVisible(false);
-    } else{
+    } else {
         ui->search_1->setVisible(true);
     }
 }
 
-void MainWindow::show_hide_search_2(){
-    if(ui->search_2->isVisible()){
+void MainWindow::show_hide_search_2() {
+    if (ui->search_2->isVisible()) {
         ui->search_2->setVisible(false);
-    } else{
+    } else {
         ui->search_2->setVisible(true);
     }
 }
 
-void MainWindow::delete_file(){
+void MainWindow::delete_file() {
     QMessageBox::StandardButton reply;
     QString question = "Are you sure you want to delete " + QString::number(chosenFiles.size()) +
-            " files?";
+                       " files?";
     reply = QMessageBox::question(this, "", question,
-                                  QMessageBox::Yes|QMessageBox::No);
+                                  QMessageBox::Yes | QMessageBox::No);
     this->setCursor(QCursor(Qt::WaitCursor));
-    for(auto &c_file: chosenFiles){
+    for (auto &c_file : chosenFiles) {
         QString absolutePath = model_1->fileInfo(c_file).absoluteFilePath();
         delete_unit(absolutePath, reply, model_1->fileInfo(c_file));
     }
@@ -120,40 +120,40 @@ void MainWindow::delete_file(){
     chosenFiles.clear();
 }
 
-void MainWindow::rename_file(){
+void MainWindow::rename_file() {
     bool result;
     QFileInfo info = model_1->fileInfo(chosenFile);
     QString name = info.baseName();
-    if(!(info.completeSuffix() == "")){
+    if (!(info.completeSuffix() == "")) {
         name.append(".");
     }
     name.append(info.completeSuffix());
     QString text;
-    if (info.permission(QFile::WriteUser)){
+    if (info.permission(QFile::WriteUser)) {
         text = QInputDialog::getText(this, tr(""),
-                                             tr("New name:"), QLineEdit::Normal,
-                                             name, &result);
-    } else{
+                                     tr("New name:"), QLineEdit::Normal,
+                                     name, &result);
+    } else {
         QMessageBox msg;
         msg.setText("No permission");
-        msg.setFixedSize(500,200);
+        msg.setFixedSize(500, 200);
         msg.exec();
     }
 
-    if(result){
-        if(info.isDir()){
+    if (result) {
+        if (info.isDir()) {
             rename_unit(info, text, true);
-        }else{
+        } else {
             rename_unit(info, text, false);
         }
     }
 }
 
-void MainWindow::get_properties(){
+void MainWindow::get_properties() {
     this->setCursor(QCursor(Qt::WaitCursor));
     QFileInfo info = model_1->fileInfo(chosenFile);
-    QDialog* widget = new QDialog(this);
-    QVBoxLayout* layout = new QVBoxLayout(widget);
+    QDialog *widget = new QDialog(this);
+    QVBoxLayout *layout = new QVBoxLayout(widget);
     PropertiesWindow *properties_window = new PropertiesWindow(widget);
     properties_window->setReadOnly(true);
     QFont sansFont("Times", 10);
@@ -161,32 +161,32 @@ void MainWindow::get_properties(){
     widget->setWindowTitle("Properties");
     Properties *properties = new Properties();
     QString name = info.baseName();
-    if(!(info.completeSuffix() == "")){
+    if (!(info.completeSuffix() == "")) {
         name.append(".");
     }
     name.append(info.completeSuffix());
     properties->setName(name);
     QString type;
-    if(info.isDir()){
+    if (info.isDir()) {
         type = "directory";
-    }else if(info.isExecutable()){
+    } else if (info.isExecutable()) {
         type = "executable";
-    }else if(info.isSymLink()){
+    } else if (info.isSymLink()) {
         type = "symbolic link";
-    }else if(info.isBundle()){
+    } else if (info.isBundle()) {
         type = "bundle";
-    }else{
+    } else {
         type = "file";
     }
     properties->setType(type);
     qint64 size;
-    if(info.isDir()){
+    if (info.isDir()) {
         directorySize = 0;
         connect(properties_window, SIGNAL(changeTextSignal(QString)), properties_window, SLOT(changeTextSlot(QString)));
         std::thread worker(dirSizeWrap, info.absoluteFilePath(), properties, properties_window);
         worker.detach();
         size = directorySize;
-    }else{
+    } else {
         size = info.size();
     }
     properties->setSize(formatSize(size));
@@ -202,30 +202,30 @@ void MainWindow::get_properties(){
     widget->exec();
 }
 
-void MainWindow::copy_file(){
+void MainWindow::copy_file() {
     copiedFiles = chosenFiles;
 }
 
-void MainWindow::cut_file(){
+void MainWindow::cut_file() {
     copiedFiles = chosenFiles;
     to_cut = true;
 }
 
-void MainWindow::paste_file(){
+void MainWindow::paste_file() {
     this->setCursor(QCursor(Qt::WaitCursor));
-    for (auto& c_file: copiedFiles){
+    for (auto &c_file : copiedFiles) {
         QFileInfo copy_info = model_1->fileInfo(c_file);
         QFileInfo chosen_info = model_1->fileInfo(chosenFile);
-        if(copy_info.isDir()){
+        if (copy_info.isDir()) {
             paste_unit(copy_info, chosen_info, true);
-        }else{
+        } else {
             paste_unit(copy_info, chosen_info, false);
         }
-        if(to_cut){
-            if(model_1->fileInfo(c_file).isDir()){
+        if (to_cut) {
+            if (model_1->fileInfo(c_file).isDir()) {
                 QDir dir(model_1->fileInfo(c_file).absoluteFilePath());
                 dir.removeRecursively();
-            }else{
+            } else {
                 QFile file(model_1->fileInfo(c_file).absoluteFilePath());
                 file.remove();
             }
@@ -235,40 +235,40 @@ void MainWindow::paste_file(){
     this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
-void MainWindow::create_file(){
+void MainWindow::create_file() {
     bool result;
     QString text = QInputDialog::getText(this, tr(""),
                                          tr("New file:"), QLineEdit::Normal,
                                          "", &result);
-    if(result){
+    if (result) {
         create_unit(text, false);
     }
 }
 
-void MainWindow::create_folder(){
+void MainWindow::create_folder() {
     bool result;
     QString text = QInputDialog::getText(this, tr(""),
                                          tr("New folder:"), QLineEdit::Normal,
                                          "", &result);
-    if(result){
+    if (result) {
         create_unit(text, true);
     }
 }
 
-void MainWindow::customMenuRequested(const QPoint &pos){
-    QListView* listView = (QListView*)sender();
-    QModelIndex index=listView->indexAt(pos);
+void MainWindow::customMenuRequested(const QPoint &pos) {
+    QListView *listView = (QListView *)sender();
+    QModelIndex index = listView->indexAt(pos);
     QModelIndexList list = listView->selectionModel()->selectedIndexes();
     chosenFiles.clear();
-    foreach(const QModelIndex &indexx, list){
+    foreach (const QModelIndex &indexx, list) {
         chosenFiles.append(indexx);
     }
     qDebug() << model_1->fileInfo(index).completeBaseName();
     qDebug() << get_filename(model_1->fileInfo(index).absoluteFilePath());
-    if(!(model_1->fileInfo(index).completeBaseName() == "." || get_filename(model_1->fileInfo(index).absoluteFilePath()) == "")){
-        if(chosenFiles.size() >= 2){
+    if (!(model_1->fileInfo(index).completeBaseName() == "." || get_filename(model_1->fileInfo(index).absoluteFilePath()) == "")) {
+        if (chosenFiles.size() >= 2) {
             chosenFile = index;
-            QMenu *menu=new QMenu(this);
+            QMenu *menu = new QMenu(this);
             menu->setObjectName("menu");
             QMenu *create_menu = menu->addMenu("Create");
             QAction *create_folder_action = new QAction("Folder", this);
@@ -295,12 +295,12 @@ void MainWindow::customMenuRequested(const QPoint &pos){
             connect(delete_action, SIGNAL(triggered()), this, SLOT(delete_file()));
             menu->popup(listView->viewport()->mapToGlobal(pos));
         }
-        else{
+        else {
             chosenFile = index;
             QFileInfo fileInfo = model_1->fileInfo(index);
-            QMenu *menu=new QMenu(this);
+            QMenu *menu = new QMenu(this);
             menu->setObjectName("menu");
-            if(fileInfo.isFile()){
+            if (fileInfo.isFile()) {
                 QAction *open_action = new QAction("Open", this);
                 menu->addAction(open_action);
                 connect(open_action, SIGNAL(triggered()), this, SLOT(open_file()));
@@ -339,38 +339,38 @@ void MainWindow::customMenuRequested(const QPoint &pos){
     }
 }
 
-void MainWindow::lineEditEnter(){
-    QLineEdit* line = (QLineEdit*)sender();
+void MainWindow::lineEditEnter() {
+    QLineEdit *line = (QLineEdit *)sender();
     QString path = line->text();
     QDir dir(path);
     QModelIndex idx;
-    if(line == ui->search_1){
+    if (line == ui->search_1) {
         idx = model_1->index(path);
     }
-    else{
+    else {
         idx = model_2->index(path);
     }
-    if(dir.exists()){
-        if(line == ui->lineEdit_1){
+    if (dir.exists()) {
+        if (line == ui->lineEdit_1) {
             ui->listView_1->setRootIndex(idx);
         }
-        else{
+        else {
             ui->listView_2->setRootIndex(idx);
         }
     }
 }
 
-void MainWindow::searchEnter(){
-    QLineEdit* line = (QLineEdit*)sender();
+void MainWindow::searchEnter() {
+    QLineEdit *line = (QLineEdit *)sender();
     QString item_name = line->text();
-    if(line == ui->search_1){
+    if (line == ui->search_1) {
         search_filter(item_name, ui->listView_1, ui->lineEdit_1, model_1);
-    } else if(line == ui->search_2){
+    } else if (line == ui->search_2) {
         search_filter(item_name, ui->listView_2, ui->lineEdit_2, model_2);
     }
 }
 
-void MainWindow::close_search(){
+void MainWindow::close_search() {
     ui->search_1->setVisible(false);
     ui->search_2->setVisible(false);
     QStringList filters;
@@ -378,16 +378,16 @@ void MainWindow::close_search(){
     model_2->setNameFilters(filters);
 }
 
-void MainWindow::open_file(){
+void MainWindow::open_file() {
     this->setCursor(QCursor(Qt::WaitCursor));
     QFileInfo fileInfo = model_1->fileInfo(chosenFile);
     QDesktopServices::openUrl(QUrl(fileInfo.absoluteFilePath().prepend("file:///")));
     this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
-void MainWindow::create_shortcut(){
+void MainWindow::create_shortcut() {
     this->setCursor(QCursor(Qt::WaitCursor));
-    for(auto &c_file: chosenFiles){
+    for (auto &c_file : chosenFiles) {
         QString absolutePath = model_1->fileInfo(c_file).absoluteFilePath();
         QFile::link(absolutePath, absolutePath + " - Shortcut.lnk");
     }
