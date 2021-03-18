@@ -5,7 +5,7 @@
 #include <QStringList>
 
 class Properties {
-  private:
+private:
     QString name;
     QString type;
     QString size;
@@ -15,7 +15,7 @@ class Properties {
     QString created;
     QString last_modified;
 
-  public:
+public:
     void setName(QString name);
 
     QString getName();

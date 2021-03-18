@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.setWindowTitle("QExplorer");
     QList<QScreen *> rec = QGuiApplication::screens();
-    w.resize(rec.first()->availableGeometry().width()/2, rec.first()->availableGeometry().height()/2);
+    w.resize(rec.first()->availableGeometry().width() / 2, rec.first()->availableGeometry().height() / 2);
     w.setStyleSheet("QMainWindow {background: 'black';}");
     w.show();
     return a.exec();

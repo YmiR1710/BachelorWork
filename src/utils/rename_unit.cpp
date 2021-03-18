@@ -1,13 +1,13 @@
 #include <./include/utils/rename_unit.h>
 
-void rename_unit(QFileInfo info, QString text, bool isFolder){
+void rename_unit(QFileInfo info, QString text, bool isFolder) {
     int counter = 1;
-    if(isFolder){
+    if (isFolder) {
         QDir dir(info.absoluteFilePath());
         QString new_path = info.absolutePath();
         new_path.append("/");
         new_path.append(text);
-        while(!dir.rename(info.absoluteFilePath(), new_path)){
+        while (!dir.rename(info.absoluteFilePath(), new_path)) {
             new_path = info.absolutePath();
             new_path.append("/");
             QStringList text_list = text.split('.');
@@ -17,12 +17,12 @@ void rename_unit(QFileInfo info, QString text, bool isFolder){
             new_path.append(text_list.join("."));
             counter++;
         }
-    }else{
+    } else {
         QFile file(info.absoluteFilePath());
         QString new_path = info.absolutePath();
         new_path.append("/");
         new_path.append(text);
-        while(!file.rename(new_path)){
+        while (!file.rename(new_path)) {
             new_path = info.absolutePath();
             new_path.append("/");
             QStringList text_list = text.split('.');

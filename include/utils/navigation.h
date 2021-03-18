@@ -7,6 +7,6 @@
 #include <QLineEdit>
 #include "./include/global.h"
 
-void open_folder(QFileSystemModel* model, QListView* listView, QLineEdit* lineEdit, QFileInfo fileInfo, const QModelIndex &index);
+void open_folder(QFileSystemModel *model, QListView *listView, QLineEdit *lineEdit, QFileInfo fileInfo, const QModelIndex &index);
 
 #endif
