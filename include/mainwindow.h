@@ -1,6 +1,21 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QMainWindow>
+#include <QDialog>
+#include <QFileSystemModel>
+#include <QMenuBar>
+#include <QFont>
+#include <QInputDialog>
+#include <QDateTime>
+#include <QShortcut>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QTextEdit>
+#include <thread>
+#include <QScreen>
+#include <QGuiApplication>
+#include "QDebug"
 #include "./../ui/ui_mainwindow.h"
 #include "./include/utils/copy_path.h"
 #include "./include/utils/dir_size.h"
