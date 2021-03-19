@@ -4,6 +4,9 @@
 #include <QString>
 #include <QStringList>
 
-QString get_filename(QString absolute_path);
+class FileNameUtils {
+public:
+    static QString get_filename(QString absolute_path);
+};
 
 #endif

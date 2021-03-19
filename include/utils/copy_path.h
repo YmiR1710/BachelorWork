@@ -2,7 +2,9 @@
 #define COPY_PATH_H
 
 #include "./include/global.h"
-
-void copyPath(QString src, QString dst);
+class CopyPathUtils {
+public:
+    static void copyPath(QString src, QString dst);
+};
 
 #endif

@@ -5,6 +5,13 @@
 #include <QFile>
 #include <QString>
 
-void rename_unit(QFileInfo info, QString text, bool isFolder);
+class RenameUtils {
+public:
+    static void rename_unit(QFileInfo info, QString text, bool isFolder);
+
+private:
+    static void rename_file(QFileInfo info, QString text);
+    static void rename_folder(QFileInfo info, QString text);
+};
 
 #endif

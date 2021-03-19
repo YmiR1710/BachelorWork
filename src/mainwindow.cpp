@@ -85,9 +85,9 @@ void MainWindow::on_listView_doubleClicked(const QModelIndex &index)
         return;
     }
     if (listView == ui->listView_1) {
-        open_folder(model_1, ui->listView_1, ui->lineEdit_1, fileInfo, index);
+        NavigationUtils::open_folder(model_1, ui->listView_1, ui->lineEdit_1, fileInfo, index);
     } else {
-        open_folder(model_2, ui->listView_2, ui->lineEdit_2, fileInfo, index);
+        NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, fileInfo, index);
     }
 
     this->setCursor(QCursor(Qt::ArrowCursor));
@@ -118,7 +118,7 @@ void MainWindow::delete_file() {
     this->setCursor(QCursor(Qt::WaitCursor));
     for (auto &c_file : chosenFiles) {
         QString absolutePath = model_1->fileInfo(c_file).absoluteFilePath();
-        delete_unit(absolutePath, reply, model_1->fileInfo(c_file));
+        DeletionUtils::delete_unit(absolutePath, reply, model_1->fileInfo(c_file));
     }
     this->setCursor(QCursor(Qt::ArrowCursor));
     chosenFiles.clear();
@@ -146,9 +146,9 @@ void MainWindow::rename_file() {
 
     if (result) {
         if (info.isDir()) {
-            rename_unit(info, text, true);
+            RenameUtils::rename_unit(info, text, true);
         } else {
-            rename_unit(info, text, false);
+            RenameUtils::rename_unit(info, text, false);
         }
     }
 }
@@ -187,13 +187,13 @@ void MainWindow::get_properties() {
     if (info.isDir()) {
         directorySize = 0;
         connect(properties_window, SIGNAL(changeTextSignal(QString)), properties_window, SLOT(changeTextSlot(QString)));
-        std::thread worker(dirSizeWrap, info.absoluteFilePath(), properties, properties_window);
+        std::thread worker(DirectorySizeCalculationUtils::dirSizeWrap, info.absoluteFilePath(), properties, properties_window);
         worker.detach();
         size = directorySize;
     } else {
         size = info.size();
     }
-    properties->setSize(formatSize(size));
+    properties->setSize(DirectorySizeCalculationUtils::formatSize(size));
     properties->setParentFolder(info.absolutePath());
     properties->setGroup(info.group());
     properties->setOwner(info.owner());
@@ -221,9 +221,9 @@ void MainWindow::paste_file() {
         QFileInfo copy_info = model_1->fileInfo(c_file);
         QFileInfo chosen_info = model_1->fileInfo(chosenFile);
         if (copy_info.isDir()) {
-            paste_unit(copy_info, chosen_info, true);
+            CopyPasteUtils::paste_unit(copy_info, chosen_info, true);
         } else {
-            paste_unit(copy_info, chosen_info, false);
+            CopyPasteUtils::paste_unit(copy_info, chosen_info, false);
         }
         if (to_cut) {
             if (model_1->fileInfo(c_file).isDir()) {
@@ -245,7 +245,7 @@ void MainWindow::create_file() {
                                          tr("New file:"), QLineEdit::Normal,
                                          "", &result);
     if (result) {
-        create_unit(text, false);
+        CreationUtils::create_unit(text, false);
     }
 }
 
@@ -255,7 +255,7 @@ void MainWindow::create_folder() {
                                          tr("New folder:"), QLineEdit::Normal,
                                          "", &result);
     if (result) {
-        create_unit(text, true);
+        CreationUtils::create_unit(text, true);
     }
 }
 
@@ -268,8 +268,8 @@ void MainWindow::customMenuRequested(const QPoint &pos) {
         chosenFiles.append(indexx);
     }
     qDebug() << model_1->fileInfo(index).completeBaseName();
-    qDebug() << get_filename(model_1->fileInfo(index).absoluteFilePath());
-    if (!(model_1->fileInfo(index).completeBaseName() == "." || get_filename(model_1->fileInfo(index).absoluteFilePath()) == "")) {
+    qDebug() << FileNameUtils::get_filename(model_1->fileInfo(index).absoluteFilePath());
+    if (!(model_1->fileInfo(index).completeBaseName() == "." || FileNameUtils::get_filename(model_1->fileInfo(index).absoluteFilePath()) == "")) {
         if (chosenFiles.size() >= 2) {
             chosenFile = index;
             QMenu *menu = new QMenu(this);
@@ -368,9 +368,9 @@ void MainWindow::searchEnter() {
     QLineEdit *line = (QLineEdit *)sender();
     QString item_name = line->text();
     if (line == ui->search_1) {
-        search_filter(item_name, ui->listView_1, ui->lineEdit_1, model_1);
+        FiltersUtils::search_filter(item_name, ui->listView_1, ui->lineEdit_1, model_1);
     } else if (line == ui->search_2) {
-        search_filter(item_name, ui->listView_2, ui->lineEdit_2, model_2);
+        FiltersUtils::search_filter(item_name, ui->listView_2, ui->lineEdit_2, model_2);
     }
 }
 

@@ -5,6 +5,13 @@
 #include <QMessageBox>
 #include <QFileInfo>
 
-void delete_unit(QString absolutePath, QMessageBox::StandardButton reply, QFileInfo fileInfo);
+class DeletionUtils {
+public:
+    static void delete_unit(QString absolutePath, QMessageBox::StandardButton reply, QFileInfo fileInfo);
+
+private:
+    static void delete_file(QString absolutePath, QMessageBox::StandardButton reply, QFileInfo fileInfo);
+    static void delete_folder(QString absolutePath, QMessageBox::StandardButton reply, QFileInfo fileInfo);
+};
 
 #endif
