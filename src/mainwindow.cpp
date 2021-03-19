@@ -25,6 +25,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowTitle("QExplorer");
+    QList<QScreen *> rec = QGuiApplication::screens();
+    resize(rec.first()->availableGeometry().width() / 2, rec.first()->availableGeometry().height() / 2);
+    setStyleSheet("QMainWindow {background: 'black';}");
     model_1 = new QFileSystemModel(this);
     model_2 = new QFileSystemModel(this);
     model_1->setFilter(QDir::QDir::AllEntries);

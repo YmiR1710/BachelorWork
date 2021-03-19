@@ -13,6 +13,8 @@
 #include <QUrl>
 #include <QTextEdit>
 #include <thread>
+#include <QScreen>
+#include <QGuiApplication>
 #include "QDebug"
 #include "./../ui/ui_mainwindow.h"
 #include "./include/utils/copy_path.h"
