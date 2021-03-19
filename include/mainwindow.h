@@ -50,11 +50,11 @@ private slots:
     void show_hide_search_1();
     void show_hide_search_2();
     void close_search();
-    void customMenuRequested(const QPoint &pos);
+    void custom_menu_requested(const QPoint &pos);
     void delete_file();
     void rename_file();
     void get_properties();
-    void lineEditEnter();
+    void line_edit_enter();
     void searchEnter();
     void copy_file();
     void paste_file();

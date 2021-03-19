@@ -53,10 +53,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->listView_2, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_listView_doubleClicked(QModelIndex)));
     connect(ui->listView_1, SIGNAL(clicked(QModelIndex)), this, SLOT(click(QModelIndex)));
     connect(ui->listView_2, SIGNAL(clicked(QModelIndex)), this, SLOT(click(QModelIndex)));
-    connect(ui->listView_2, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customMenuRequested(QPoint)));
-    connect(ui->listView_1, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customMenuRequested(QPoint)));
-    connect(ui->lineEdit_1, SIGNAL(returnPressed()), SLOT(lineEditEnter()));
-    connect(ui->lineEdit_2, SIGNAL(returnPressed()), SLOT(lineEditEnter()));
+    connect(ui->listView_2, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(custom_menu_requested(QPoint)));
+    connect(ui->listView_1, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(custom_menu_requested(QPoint)));
+    connect(ui->lineEdit_1, SIGNAL(returnPressed()), SLOT(line_edit_enter()));
+    connect(ui->lineEdit_2, SIGNAL(returnPressed()), SLOT(line_edit_enter()));
     connect(ui->search_button_1, SIGNAL (released()), this, SLOT (show_hide_search_1()));
     connect(ui->search_button_2, SIGNAL (released()), this, SLOT (show_hide_search_2()));
     connect(ui->search_1, SIGNAL(returnPressed()), SLOT(searchEnter()));
@@ -263,7 +263,7 @@ void MainWindow::create_folder() {
     }
 }
 
-void MainWindow::customMenuRequested(const QPoint &pos) {
+void MainWindow::custom_menu_requested(const QPoint &pos) {
     QListView *listView = (QListView *)sender();
     QModelIndex index = listView->indexAt(pos);
     QModelIndexList list = listView->selectionModel()->selectedIndexes();
@@ -274,80 +274,53 @@ void MainWindow::customMenuRequested(const QPoint &pos) {
     qDebug() << model_1->fileInfo(index).completeBaseName();
     qDebug() << FileNameUtils::get_filename(model_1->fileInfo(index).absoluteFilePath());
     if (!(model_1->fileInfo(index).completeBaseName() == "." || FileNameUtils::get_filename(model_1->fileInfo(index).absoluteFilePath()) == "")) {
-        if (chosenFiles.size() >= 2) {
-            chosenFile = index;
-            QMenu *menu = new QMenu(this);
-            menu->setObjectName("menu");
-            QMenu *create_menu = menu->addMenu("Create");
-            QAction *create_folder_action = new QAction("Folder", this);
-            QAction *create_file_action = new QAction("File", this);
-            create_menu->addAction(create_folder_action);
-            create_menu->addAction(create_file_action);
-            QAction *copy_action = new QAction("Copy", this);
-            menu->addAction(copy_action);
-            QAction *cut_action = new QAction("Cut", this);
-            menu->addAction(cut_action);
-            QAction *paste_action = new QAction("Paste", this);
-            menu->addAction(paste_action);
-            paste_action->setObjectName("paste_action");
-            QAction *delete_action = new QAction("Delete", this);
-            menu->addAction(delete_action);
-            QAction *shortcut_action = new QAction("Create shortcut", this);
-            menu->addAction(shortcut_action);
-            connect(shortcut_action, SIGNAL(triggered()), this, SLOT(create_shortcut()));
-            connect(create_file_action, SIGNAL(triggered()), this, SLOT(create_file()));
-            connect(create_folder_action, SIGNAL(triggered()), this, SLOT(create_folder()));
-            connect(copy_action, SIGNAL(triggered()), this, SLOT(copy_file()));
-            connect(cut_action, SIGNAL(triggered()), this, SLOT(cut_file()));
-            connect(paste_action, SIGNAL(triggered()), this, SLOT(paste_file()));
-            connect(delete_action, SIGNAL(triggered()), this, SLOT(delete_file()));
-            menu->popup(listView->viewport()->mapToGlobal(pos));
+        chosenFile = index;
+        QMenu *menu = new QMenu(this);
+        menu->setObjectName("menu");
+        QFileInfo fileInfo = model_1->fileInfo(index);
+        if (chosenFiles.size() < 2 && fileInfo.isFile()) {
+            QAction *open_action = new QAction("Open", this);
+            menu->addAction(open_action);
+            connect(open_action, SIGNAL(triggered()), this, SLOT(open_file()));
         }
-        else {
-            chosenFile = index;
-            QFileInfo fileInfo = model_1->fileInfo(index);
-            QMenu *menu = new QMenu(this);
-            menu->setObjectName("menu");
-            if (fileInfo.isFile()) {
-                QAction *open_action = new QAction("Open", this);
-                menu->addAction(open_action);
-                connect(open_action, SIGNAL(triggered()), this, SLOT(open_file()));
-            }
-            QMenu *create_menu = menu->addMenu("Create");
-            QAction *create_folder_action = new QAction("Folder", this);
-            QAction *create_file_action = new QAction("File", this);
-            create_menu->addAction(create_folder_action);
-            create_menu->addAction(create_file_action);
-            QAction *copy_action = new QAction("Copy", this);
-            menu->addAction(copy_action);
-            QAction *cut_action = new QAction("Cut", this);
-            menu->addAction(cut_action);
-            QAction *paste_action = new QAction("Paste", this);
-            menu->addAction(paste_action);
-            paste_action->setObjectName("paste_action");
-            QAction *delete_action = new QAction("Delete", this);
-            menu->addAction(delete_action);
+        QMenu *create_menu = menu->addMenu("Create");
+        QAction *create_folder_action = new QAction("Folder", this);
+        QAction *create_file_action = new QAction("File", this);
+        create_menu->addAction(create_folder_action);
+        create_menu->addAction(create_file_action);
+        QAction *copy_action = new QAction("Copy", this);
+        menu->addAction(copy_action);
+        QAction *cut_action = new QAction("Cut", this);
+        menu->addAction(cut_action);
+        QAction *paste_action = new QAction("Paste", this);
+        menu->addAction(paste_action);
+        paste_action->setObjectName("paste_action");
+        QAction *delete_action = new QAction("Delete", this);
+        menu->addAction(delete_action);
+        if (chosenFiles.size() < 2) {
             QAction *rename_action = new QAction("Rename", this);
             menu->addAction(rename_action);
-            QAction *shortcut_action = new QAction("Create shortcut", this);
-            menu->addAction(shortcut_action);
-            connect(shortcut_action, SIGNAL(triggered()), this, SLOT(create_shortcut()));
+            connect(rename_action, SIGNAL(triggered()), this, SLOT(rename_file()));
+        }
+        QAction *shortcut_action = new QAction("Create shortcut", this);
+        menu->addAction(shortcut_action);
+        connect(shortcut_action, SIGNAL(triggered()), this, SLOT(create_shortcut()));
+        if (chosenFiles.size() < 2) {
             QAction *properties_action = new QAction("Properties", this);
             menu->addAction(properties_action);
-            connect(create_file_action, SIGNAL(triggered()), this, SLOT(create_file()));
-            connect(create_folder_action, SIGNAL(triggered()), this, SLOT(create_folder()));
-            connect(copy_action, SIGNAL(triggered()), this, SLOT(copy_file()));
-            connect(cut_action, SIGNAL(triggered()), this, SLOT(cut_file()));
-            connect(paste_action, SIGNAL(triggered()), this, SLOT(paste_file()));
-            connect(delete_action, SIGNAL(triggered()), this, SLOT(delete_file()));
-            connect(rename_action, SIGNAL(triggered()), this, SLOT(rename_file()));
             connect(properties_action, SIGNAL(triggered()), this, SLOT(get_properties()));
-            menu->popup(listView->viewport()->mapToGlobal(pos));
         }
+        connect(create_file_action, SIGNAL(triggered()), this, SLOT(create_file()));
+        connect(create_folder_action, SIGNAL(triggered()), this, SLOT(create_folder()));
+        connect(copy_action, SIGNAL(triggered()), this, SLOT(copy_file()));
+        connect(cut_action, SIGNAL(triggered()), this, SLOT(cut_file()));
+        connect(paste_action, SIGNAL(triggered()), this, SLOT(paste_file()));
+        connect(delete_action, SIGNAL(triggered()), this, SLOT(delete_file()));
+        menu->popup(listView->viewport()->mapToGlobal(pos));
     }
 }
 
-void MainWindow::lineEditEnter() {
+void MainWindow::line_edit_enter() {
     QLineEdit *line = (QLineEdit *)sender();
     QString path = line->text();
     QDir dir(path);
