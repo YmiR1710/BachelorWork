@@ -42,6 +42,7 @@ set(PROJECT_SOURCES
         include/properties.h
         include/propertieswindow.h
         ui/mainwindow.ui
+        resources/resources.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
