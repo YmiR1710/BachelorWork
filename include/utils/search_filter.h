@@ -6,6 +6,9 @@
 #include <QListView>
 #include <QLineEdit>
 
-void search_filter(QString item_name, QListView *listView, QLineEdit *lineEdit, QFileSystemModel *model);
+class FiltersUtils {
+public:
+    static void search_filter(QString item_name, QListView *listView, QLineEdit *lineEdit, QFileSystemModel *model);
+};
 
 #endif

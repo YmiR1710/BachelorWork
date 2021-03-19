@@ -7,10 +7,13 @@
 #include <QTextEdit>
 #include <QDebug>
 
-void dirSizeWrap(QString dirPath, Properties *properties, PropertiesWindow *widget);
+class DirectorySizeCalculationUtils {
+public:
+    static void dirSizeWrap(QString dirPath, Properties *properties, PropertiesWindow *widget);
+    static QString formatSize(qint64 size);
 
-void dirSize(QString dirPath, Properties *properties, PropertiesWindow *widget);
-
-QString formatSize(qint64 size);
+private:
+    static void dirSize(QString dirPath, Properties *properties, PropertiesWindow *widget);
+};
 
 #endif

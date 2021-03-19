@@ -1,6 +1,7 @@
 #include "./include/utils/copy_path.h"
 
-void copyPath(QString src, QString dst) {
+
+void CopyPathUtils::copyPath(QString src, QString dst) {
     QDir dir(src);
     if (! dir.exists())
         return;

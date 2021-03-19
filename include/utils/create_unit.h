@@ -5,6 +5,15 @@
 #include <QDir>
 #include "./include/global.h"
 
-void create_unit(QString text, bool isFolder);
+class CreationUtils {
+public:
+    static void create_unit(QString text, bool isFolder);
+
+private:
+    static void create_folder(QString text);
+    static void create_file(QString text);
+};
+
+
 
 #endif
