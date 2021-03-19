@@ -63,6 +63,7 @@ private slots:
     void create_file();
     void create_folder();
     void create_shortcut();
+    void change_root_path(QString path);
 
 
 private:

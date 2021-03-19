@@ -13,7 +13,7 @@ void SwapDrivesUtils::configure_ui(QComboBox *ui) {
 QStringList SwapDrivesUtils::get_drives_name() {
     QStringList list;
     for (auto info : QDir::drives()) {
-        list.append(info.absoluteFilePath().replace(":/", ""));
+        list.append(info.absoluteFilePath());
     }
     return list;
 }

@@ -47,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->search_2->setVisible(false);
     SwapDrivesUtils::configure_ui(ui->comboBox_1);
     SwapDrivesUtils::configure_ui(ui->comboBox_2);
+    connect(ui->comboBox_1, SIGNAL(currentTextChanged(QString)), this, SLOT(change_root_path(QString)));
+    connect(ui->comboBox_2, SIGNAL(currentTextChanged(QString)), this, SLOT(change_root_path(QString)));
     connect(ui->listView_1, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_listView_doubleClicked(QModelIndex)));
     connect(ui->listView_2, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_listView_doubleClicked(QModelIndex)));
     connect(ui->listView_1, SIGNAL(clicked(QModelIndex)), this, SLOT(click(QModelIndex)));
@@ -363,6 +365,18 @@ void MainWindow::lineEditEnter() {
         else {
             ui->listView_2->setRootIndex(idx);
         }
+    }
+}
+
+void MainWindow::change_root_path(QString path) {
+    QComboBox *box = (QComboBox *)sender();
+    if (box == ui->comboBox_1) {
+        ui->listView_1->setRootIndex(model_1->index(path));
+        ui->lineEdit_1->setText(path);
+    }
+    else if (box == ui->comboBox_2) {
+        ui->listView_2->setRootIndex(model_2->index(path));
+        ui->lineEdit_2->setText(path);
     }
 }
 
