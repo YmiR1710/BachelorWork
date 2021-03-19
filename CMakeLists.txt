@@ -27,6 +27,7 @@ set(PROJECT_SOURCES
         src/utils/rename_unit.cpp
         src/utils/copypaste.cpp
         src/utils/delete_unit.cpp
+        src/utils/swap_drives.cpp
         src/propertieswindow.cpp
         include/mainwindow.h
         include/global.h
@@ -39,6 +40,7 @@ set(PROJECT_SOURCES
         include/utils/rename_unit.h
         include/utils/copypaste.h
         include/utils/delete_unit.h
+        include/utils/swap_drives.h
         include/properties.h
         include/propertieswindow.h
         ui/mainwindow.ui

@@ -45,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->listView_2->setRootIndex(idx_2);
     ui->search_1->setVisible(false);
     ui->search_2->setVisible(false);
+    SwapDrivesUtils::configure_ui(ui->comboBox_1);
+    SwapDrivesUtils::configure_ui(ui->comboBox_2);
     connect(ui->listView_1, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_listView_doubleClicked(QModelIndex)));
     connect(ui->listView_2, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_listView_doubleClicked(QModelIndex)));
     connect(ui->listView_1, SIGNAL(clicked(QModelIndex)), this, SLOT(click(QModelIndex)));
