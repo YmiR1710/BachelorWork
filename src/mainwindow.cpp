@@ -18,6 +18,7 @@ bool to_cut = false;
 QFileSystemModel *model_1;
 QFileSystemModel *model_2;
 qint64 directorySize;
+Panel active_panel;
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -28,12 +29,12 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("QExplorer");
     QList<QScreen *> rec = QGuiApplication::screens();
     resize(rec.first()->availableGeometry().width() / 2, rec.first()->availableGeometry().height() / 2);
-    setStyleSheet("QMainWindow {background: 'black';}");
+    setStyleSheet("QMainWindow {background: 'black';} QListView {background: 'black'; color:'white'}");
     model_1 = new QFileSystemModel(this);
     model_2 = new QFileSystemModel(this);
-    model_1->setFilter(QDir::QDir::AllEntries);
+    model_1->setFilter(QDir::QDir::AllEntries | QDir::QDir::NoDot);
     model_1->setRootPath(mPath);
-    model_2->setFilter(QDir::QDir::AllEntries);
+    model_2->setFilter(QDir::QDir::AllEntries | QDir::QDir::NoDot);
     model_2->setRootPath(mPath);
     ui->lineEdit_1->setText(mPath);
     ui->lineEdit_2->setText(mPath);
@@ -47,8 +48,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->search_2->setVisible(false);
     SwapDrivesUtils::configure_ui(ui->comboBox_1);
     SwapDrivesUtils::configure_ui(ui->comboBox_2);
-    connect(ui->comboBox_1, SIGNAL(currentTextChanged(QString)), this, SLOT(change_root_path(QString)));
-    connect(ui->comboBox_2, SIGNAL(currentTextChanged(QString)), this, SLOT(change_root_path(QString)));
+    connect(ui->comboBox_1, SIGNAL(textActivated(QString)), this, SLOT(change_root_path(QString)));
+    connect(ui->comboBox_2, SIGNAL(textActivated(QString)), this, SLOT(change_root_path(QString)));
     connect(ui->listView_1, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_listView_doubleClicked(QModelIndex)));
     connect(ui->listView_2, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_listView_doubleClicked(QModelIndex)));
     connect(ui->listView_1, SIGNAL(clicked(QModelIndex)), this, SLOT(click(QModelIndex)));
@@ -159,7 +160,18 @@ void MainWindow::rename_file() {
 
 void MainWindow::get_properties() {
     this->setCursor(QCursor(Qt::WaitCursor));
-    QFileInfo info = model_1->fileInfo(chosenFile);
+    QFileInfo info(ui->lineEdit_1->text());
+    if (chosenFile.isValid()) {
+        info = model_1->fileInfo(chosenFile);
+    }
+    else {
+        if (active_panel == Panel::PANEL_1) {
+            info = QFileInfo(ui->lineEdit_1->text());
+        }
+        else if (active_panel == Panel::PANEL_2) {
+            info = QFileInfo(ui->lineEdit_2->text());
+        }
+    }
     QDialog *widget = new QDialog(this);
     QVBoxLayout *layout = new QVBoxLayout(widget);
     PropertiesWindow *properties_window = new PropertiesWindow(widget);
@@ -223,11 +235,17 @@ void MainWindow::paste_file() {
     this->setCursor(QCursor(Qt::WaitCursor));
     for (auto &c_file : copiedFiles) {
         QFileInfo copy_info = model_1->fileInfo(c_file);
-        QFileInfo chosen_info = model_1->fileInfo(chosenFile);
+        QString path;
+        if (active_panel == Panel::PANEL_1) {
+            path = ui->lineEdit_1->text();
+        }
+        else if (active_panel == Panel::PANEL_2) {
+            path = ui->lineEdit_2->text();
+        }
         if (copy_info.isDir()) {
-            CopyPasteUtils::paste_unit(copy_info, chosen_info, true);
+            CopyPasteUtils::paste_unit(copy_info, path, true);
         } else {
-            CopyPasteUtils::paste_unit(copy_info, chosen_info, false);
+            CopyPasteUtils::paste_unit(copy_info, path, false);
         }
         if (to_cut) {
             if (model_1->fileInfo(c_file).isDir()) {
@@ -249,7 +267,12 @@ void MainWindow::create_file() {
                                          tr("New file:"), QLineEdit::Normal,
                                          "", &result);
     if (result) {
-        CreationUtils::create_unit(text, false);
+        if (active_panel == Panel::PANEL_1) {
+            CreationUtils::create_unit(text, ui->lineEdit_1->text(), false);
+        }
+        else if (active_panel == Panel::PANEL_2) {
+            CreationUtils::create_unit(text, ui->lineEdit_2->text(), false);
+        }
     }
 }
 
@@ -259,26 +282,35 @@ void MainWindow::create_folder() {
                                          tr("New folder:"), QLineEdit::Normal,
                                          "", &result);
     if (result) {
-        CreationUtils::create_unit(text, true);
+        if (active_panel == Panel::PANEL_1) {
+            CreationUtils::create_unit(text, ui->lineEdit_1->text(), true);
+        }
+        else if (active_panel == Panel::PANEL_2) {
+            CreationUtils::create_unit(text, ui->lineEdit_2->text(), true);
+        }
     }
 }
 
 void MainWindow::custom_menu_requested(const QPoint &pos) {
     QListView *listView = (QListView *)sender();
     QModelIndex index = listView->indexAt(pos);
+    if (listView == ui->listView_1) {
+        active_panel = Panel::PANEL_1;
+    }
+    else if ( listView == ui->listView_2) {
+        active_panel = Panel::PANEL_2;
+    }
     QModelIndexList list = listView->selectionModel()->selectedIndexes();
     chosenFiles.clear();
     foreach (const QModelIndex &indexx, list) {
         chosenFiles.append(indexx);
     }
-    qDebug() << model_1->fileInfo(index).completeBaseName();
-    qDebug() << FileNameUtils::get_filename(model_1->fileInfo(index).absoluteFilePath());
-    if (!(model_1->fileInfo(index).completeBaseName() == "." || FileNameUtils::get_filename(model_1->fileInfo(index).absoluteFilePath()) == "")) {
+    if (!(model_1->fileInfo(index).completeBaseName() == ".")) {
         chosenFile = index;
         QMenu *menu = new QMenu(this);
         menu->setObjectName("menu");
         QFileInfo fileInfo = model_1->fileInfo(index);
-        if (chosenFiles.size() < 2 && fileInfo.isFile()) {
+        if (chosenFiles.size() < 2 && fileInfo.isFile() && index.isValid()) {
             QAction *open_action = new QAction("Open", this);
             menu->addAction(open_action);
             connect(open_action, SIGNAL(triggered()), this, SLOT(open_file()));
@@ -288,23 +320,30 @@ void MainWindow::custom_menu_requested(const QPoint &pos) {
         QAction *create_file_action = new QAction("File", this);
         create_menu->addAction(create_folder_action);
         create_menu->addAction(create_file_action);
-        QAction *copy_action = new QAction("Copy", this);
-        menu->addAction(copy_action);
-        QAction *cut_action = new QAction("Cut", this);
-        menu->addAction(cut_action);
+        if (index.isValid()) {
+            QAction *copy_action = new QAction("Copy", this);
+            menu->addAction(copy_action);
+            QAction *cut_action = new QAction("Cut", this);
+            menu->addAction(cut_action);
+            connect(copy_action, SIGNAL(triggered()), this, SLOT(copy_file()));
+            connect(cut_action, SIGNAL(triggered()), this, SLOT(cut_file()));
+        }
         QAction *paste_action = new QAction("Paste", this);
         menu->addAction(paste_action);
         paste_action->setObjectName("paste_action");
-        QAction *delete_action = new QAction("Delete", this);
-        menu->addAction(delete_action);
-        if (chosenFiles.size() < 2) {
-            QAction *rename_action = new QAction("Rename", this);
-            menu->addAction(rename_action);
-            connect(rename_action, SIGNAL(triggered()), this, SLOT(rename_file()));
+        if (index.isValid()) {
+            QAction *delete_action = new QAction("Delete", this);
+            menu->addAction(delete_action);
+            if (chosenFiles.size() < 2) {
+                QAction *rename_action = new QAction("Rename", this);
+                menu->addAction(rename_action);
+                connect(rename_action, SIGNAL(triggered()), this, SLOT(rename_file()));
+            }
+            QAction *shortcut_action = new QAction("Create shortcut", this);
+            menu->addAction(shortcut_action);
+            connect(shortcut_action, SIGNAL(triggered()), this, SLOT(create_shortcut()));
+            connect(delete_action, SIGNAL(triggered()), this, SLOT(delete_file()));
         }
-        QAction *shortcut_action = new QAction("Create shortcut", this);
-        menu->addAction(shortcut_action);
-        connect(shortcut_action, SIGNAL(triggered()), this, SLOT(create_shortcut()));
         if (chosenFiles.size() < 2) {
             QAction *properties_action = new QAction("Properties", this);
             menu->addAction(properties_action);
@@ -312,10 +351,7 @@ void MainWindow::custom_menu_requested(const QPoint &pos) {
         }
         connect(create_file_action, SIGNAL(triggered()), this, SLOT(create_file()));
         connect(create_folder_action, SIGNAL(triggered()), this, SLOT(create_folder()));
-        connect(copy_action, SIGNAL(triggered()), this, SLOT(copy_file()));
-        connect(cut_action, SIGNAL(triggered()), this, SLOT(cut_file()));
         connect(paste_action, SIGNAL(triggered()), this, SLOT(paste_file()));
-        connect(delete_action, SIGNAL(triggered()), this, SLOT(delete_file()));
         menu->popup(listView->viewport()->mapToGlobal(pos));
     }
 }

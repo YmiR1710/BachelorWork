@@ -1,6 +1,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#include "panels.h"
 #include <QFileSystemModel>
 
 extern QModelIndex chosenFile;
@@ -11,5 +12,6 @@ extern bool to_cut;
 extern QFileSystemModel *model_1;
 extern QFileSystemModel *model_2;
 extern qint64 directorySize;
+extern Panel active_panel;
 
 #endif

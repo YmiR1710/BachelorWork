@@ -43,6 +43,7 @@ set(PROJECT_SOURCES
         include/utils/swap_drives.h
         include/properties.h
         include/propertieswindow.h
+        include/panels.h
         ui/mainwindow.ui
         resources/resources.qrc
 )

@@ -7,11 +7,11 @@
 
 class CreationUtils {
 public:
-    static void create_unit(QString text, bool isFolder);
+    static void create_unit(QString text, QString path, bool isFolder);
 
 private:
-    static void create_folder(QString text);
-    static void create_file(QString text);
+    static void create_folder(QString text, QString path);
+    static void create_file(QString text, QString path);
 };
 
 
