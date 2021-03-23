@@ -3,12 +3,12 @@
 
 #include <QStringList>
 #include <QFileSystemModel>
-#include <QListView>
+#include <QTableView>
 #include <QLineEdit>
 
 class FiltersUtils {
 public:
-    static void search_filter(QString item_name, QListView *listView, QLineEdit *lineEdit, QFileSystemModel *model);
+    static void search_filter(QString item_name, QTableView *listView, QLineEdit *lineEdit, QFileSystemModel *model);
 };
 
 #endif

@@ -19,6 +19,7 @@ QFileSystemModel *model_1;
 QFileSystemModel *model_2;
 qint64 directorySize;
 Panel active_panel;
+Theme currentTheme;
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -26,10 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setWindowTitle("QExplorer");
-    QList<QScreen *> rec = QGuiApplication::screens();
-    resize(rec.first()->availableGeometry().width() / 2, rec.first()->availableGeometry().height() / 2);
-    setStyleSheet("QMainWindow {background: 'black';} QListView {background: 'black'; color:'white'}");
+    configure();
     model_1 = new QFileSystemModel(this);
     model_2 = new QFileSystemModel(this);
     model_1->setFilter(QDir::QDir::AllEntries | QDir::QDir::NoDot);
@@ -44,6 +42,22 @@ MainWindow::MainWindow(QWidget *parent)
     QModelIndex idx_2 = model_2->index(model_2->rootPath());
     ui->listView_1->setRootIndex(idx);
     ui->listView_2->setRootIndex(idx_2);
+    ui->listView_1->verticalHeader()->setVisible(false);
+    ui->listView_2->verticalHeader()->setVisible(false);
+    ui->listView_1->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->listView_2->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->listView_1->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    ui->listView_2->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    ui->listView_1->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->listView_1->horizontalHeader()->setStretchLastSection(true);
+    ui->listView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->listView_2->horizontalHeader()->setStretchLastSection(true);
+    ui->listView_1->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->listView_2->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->listView_1->setSortingEnabled(true);
+    ui->listView_2->setSortingEnabled(true);
+    ui->listView_1->horizontalHeader()->setSortIndicator(0, Qt::AscendingOrder);
+    ui->listView_2->horizontalHeader()->setSortIndicator(0, Qt::AscendingOrder);
     ui->search_1->setVisible(false);
     ui->search_2->setVisible(false);
     SwapDrivesUtils::configure_ui(ui->comboBox_1);
@@ -62,10 +76,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->search_button_2, SIGNAL (released()), this, SLOT (show_hide_search_2()));
     connect(ui->search_1, SIGNAL(returnPressed()), SLOT(searchEnter()));
     connect(ui->search_2, SIGNAL(returnPressed()), SLOT(searchEnter()));
-    ui->listView_1->setContextMenuPolicy(Qt::CustomContextMenu);
-    ui->listView_2->setContextMenuPolicy(Qt::CustomContextMenu);
-    ui->listView_1->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    ui->listView_2->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    connect(ui->actionDark, SIGNAL(triggered()), this, SLOT(change_theme()));
+    connect(ui->actionLight, SIGNAL(triggered()), this, SLOT(change_theme()));
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_C), this, SLOT(copy_file()));
     new QShortcut(QKeySequence(Qt::Key_Escape), this, SLOT(close_search()));
 //    new QShortcut(QKeySequence(Qt::Key_Delete), this, SLOT(delete_file())); TODO
@@ -76,16 +88,27 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::click(const QModelIndex &index) {
-    chosenFile = index;
+    chosenFile = index.siblingAtColumn(0);
 }
 
 void MainWindow::on_listView_doubleClicked(const QModelIndex &index)
 {
     this->setCursor(QCursor(Qt::WaitCursor));
-    QListView *listView = (QListView *)sender();
+    QTableView *listView = (QTableView *)sender();
     QFileInfo fileInfo = model_1->fileInfo(index);
     if (fileInfo.isFile()) {
         QDesktopServices::openUrl(QUrl(fileInfo.absoluteFilePath().prepend("file:///")));
+        this->setCursor(QCursor(Qt::ArrowCursor));
+        return;
+    }
+    else if (fileInfo.isSymLink()) {
+        if (listView == ui->listView_1) {
+            QModelIndex index = model_1->index(fileInfo.symLinkTarget());
+            NavigationUtils::open_folder(model_1, ui->listView_1, ui->lineEdit_1, model_1->fileInfo(index), index);
+        } else {
+            QModelIndex index = model_2->index(fileInfo.symLinkTarget());
+            NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, model_2->fileInfo(index), index);
+        }
         this->setCursor(QCursor(Qt::ArrowCursor));
         return;
     }
@@ -179,6 +202,9 @@ void MainWindow::get_properties() {
     QFont sansFont("Times", 10);
     properties_window->setCurrentFont(sansFont);
     widget->setWindowTitle("Properties");
+    QPushButton *button = new QPushButton(widget);
+    button->setText("Close");
+    connect(button, SIGNAL(clicked()), widget, SLOT(close()));
     Properties *properties = new Properties();
     QString name = info.baseName();
     if (!(info.completeSuffix() == "")) {
@@ -216,18 +242,31 @@ void MainWindow::get_properties() {
     properties->setLastModified(info.lastModified().toString(Qt::SystemLocaleLongDate));
     properties->setCreated(info.created().toString(Qt::SystemLocaleLongDate));
     properties_window->setText(properties->toString());
+    properties_window->setFixedHeight(this->height() / 2);
+    properties_window->setFixedWidth(this->width() / 4);
     this->setCursor(QCursor(Qt::ArrowCursor));
     layout->addWidget(properties_window, 0, 0);
+    layout->addWidget(button);
     widget->setLayout(layout);
     widget->exec();
 }
 
 void MainWindow::copy_file() {
-    copiedFiles = chosenFiles;
+    if (chosenFiles.empty()) {
+        copiedFiles.append(chosenFile);
+    }
+    else {
+        copiedFiles = chosenFiles;
+    }
 }
 
 void MainWindow::cut_file() {
-    copiedFiles = chosenFiles;
+    if (chosenFiles.empty()) {
+        copiedFiles.append(chosenFile);
+    }
+    else {
+        copiedFiles = chosenFiles;
+    }
     to_cut = true;
 }
 
@@ -242,13 +281,13 @@ void MainWindow::paste_file() {
         else if (active_panel == Panel::PANEL_2) {
             path = ui->lineEdit_2->text();
         }
-        if (copy_info.isDir()) {
+        if (copy_info.isDir() && !copy_info.isSymLink()) {
             CopyPasteUtils::paste_unit(copy_info, path, true);
         } else {
             CopyPasteUtils::paste_unit(copy_info, path, false);
         }
         if (to_cut) {
-            if (model_1->fileInfo(c_file).isDir()) {
+            if (model_1->fileInfo(c_file).isDir() && !model_1->fileInfo(c_file).isSymLink()) {
                 QDir dir(model_1->fileInfo(c_file).absoluteFilePath());
                 dir.removeRecursively();
             } else {
@@ -258,6 +297,7 @@ void MainWindow::paste_file() {
         }
     }
     to_cut = false;
+    copiedFiles.clear();
     this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
@@ -292,7 +332,7 @@ void MainWindow::create_folder() {
 }
 
 void MainWindow::custom_menu_requested(const QPoint &pos) {
-    QListView *listView = (QListView *)sender();
+    QTableView *listView = (QTableView *)sender();
     QModelIndex index = listView->indexAt(pos);
     if (listView == ui->listView_1) {
         active_panel = Panel::PANEL_1;
@@ -303,7 +343,8 @@ void MainWindow::custom_menu_requested(const QPoint &pos) {
     QModelIndexList list = listView->selectionModel()->selectedIndexes();
     chosenFiles.clear();
     foreach (const QModelIndex &indexx, list) {
-        chosenFiles.append(indexx);
+        if (indexx.column() == 0)
+            chosenFiles.append(indexx);
     }
     if (!(model_1->fileInfo(index).completeBaseName() == ".")) {
         chosenFile = index;
@@ -422,4 +463,31 @@ void MainWindow::create_shortcut() {
     }
     this->setCursor(QCursor(Qt::ArrowCursor));
     chosenFiles.clear();
+}
+
+void MainWindow::change_theme() {
+    QAction *action = (QAction *)sender();
+    if (action == ui->actionDark) {
+        ConfigParser::change_config(QString("theme"), QString("DARK"));
+        currentTheme = Theme::DARK;
+        setStyleSheet("QMainWindow {background: 'black';} QTableView {background: 'black'; color:'white'}");
+    }
+    else if (action == ui->actionLight) {
+        ConfigParser::change_config(QString("theme"), QString("LIGHT"));
+        currentTheme = Theme::LIGHT;
+        setStyleSheet("QMainWindow {background: 'white';} QTableView {background: 'white'; color:'black'}");
+    }
+}
+
+void MainWindow::configure() {
+    setWindowTitle("QExplorer");
+    QList<QScreen *> rec = QGuiApplication::screens();
+    resize(rec.first()->availableGeometry().width() / 2, rec.first()->availableGeometry().height() / 2);
+    ConfigParser::configure();
+    if (currentTheme == Theme::DARK) {
+        setStyleSheet("QMainWindow {background: 'black';} QTableView {background: 'black'; color:'white'}");
+    }
+    else if (currentTheme == Theme::LIGHT) {
+        setStyleSheet("QMainWindow {background: 'white';} QTableView {background: 'white'; color:'black'}");
+    }
 }

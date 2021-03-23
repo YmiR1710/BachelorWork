@@ -13,6 +13,7 @@
 #include "./include/utils/copypaste.h"
 #include "./include/utils/delete_unit.h"
 #include "./include/utils/swap_drives.h"
+#include "./include/utils/config_parser.h"
 #include "./include/properties.h"
 #include "./include/propertieswindow.h"
 #include <QMainWindow>
@@ -64,9 +65,11 @@ private slots:
     void create_folder();
     void create_shortcut();
     void change_root_path(QString path);
+    void change_theme();
 
 
 private:
     Ui::MainWindow *ui;
+    void configure();
 };
 #endif

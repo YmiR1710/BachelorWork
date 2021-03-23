@@ -28,6 +28,7 @@ set(PROJECT_SOURCES
         src/utils/copypaste.cpp
         src/utils/delete_unit.cpp
         src/utils/swap_drives.cpp
+        src/utils/config_parser.cpp
         src/propertieswindow.cpp
         include/mainwindow.h
         include/global.h
@@ -41,27 +42,30 @@ set(PROJECT_SOURCES
         include/utils/copypaste.h
         include/utils/delete_unit.h
         include/utils/swap_drives.h
+        include/utils/config_parser.h
         include/properties.h
         include/propertieswindow.h
         include/panels.h
+        include/themes.h
         ui/mainwindow.ui
         resources/resources.qrc
+        config/.config
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(BachelorWork
+    qt_add_executable(qExplorer
         ${PROJECT_SOURCES}
     )
 else()
     if(ANDROID)
-        add_library(BachelorWork SHARED
+        add_library(qExplorer SHARED
             ${PROJECT_SOURCES}
         )
     else()
-        add_executable(BachelorWork
+        add_executable(qExplorer
             ${PROJECT_SOURCES}
         )
     endif()
 endif()
-
-target_link_libraries(BachelorWork PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+set_target_properties(qExplorer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+target_link_libraries(qExplorer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)

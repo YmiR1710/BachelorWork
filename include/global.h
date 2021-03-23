@@ -2,6 +2,7 @@
 #define GLOBAL_H
 
 #include "panels.h"
+#include "themes.h"
 #include <QFileSystemModel>
 
 extern QModelIndex chosenFile;
@@ -13,5 +14,6 @@ extern QFileSystemModel *model_1;
 extern QFileSystemModel *model_2;
 extern qint64 directorySize;
 extern Panel active_panel;
+extern Theme currentTheme;
 
 #endif

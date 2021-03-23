@@ -36,8 +36,19 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>../icons/search_icon.png</normaloff>../icons/search_icon.png</iconset>
+             <iconset resource="../resources/resources.qrc">
+              <normaloff>:/icons/search_icon.png</normaloff>:/icons/search_icon.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_1">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources/resources.qrc">
+              <normaloff>:/icons/arrow.png</normaloff>:/icons/arrow.png</iconset>
             </property>
            </widget>
           </item>
@@ -70,7 +81,7 @@
          <widget class="QLineEdit" name="search_1"/>
         </item>
         <item>
-         <widget class="QListView" name="listView_1"/>
+         <widget class="QTableView" name="listView_1"/>
         </item>
        </layout>
       </widget>
@@ -95,6 +106,17 @@
            <widget class="QLineEdit" name="lineEdit_2"/>
           </item>
           <item>
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources/resources.qrc">
+              <normaloff>:/icons/arrow.png</normaloff>:/icons/arrow.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="search_button_2">
             <property name="minimumSize">
              <size>
@@ -112,8 +134,8 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>../icons/search_icon.png</normaloff>../icons/search_icon.png</iconset>
+             <iconset resource="../resources/resources.qrc">
+              <normaloff>:/icons/search_icon.png</normaloff>:/icons/search_icon.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -129,7 +151,7 @@
          <widget class="QLineEdit" name="search_2"/>
         </item>
         <item>
-         <widget class="QListView" name="listView_2"/>
+         <widget class="QTableView" name="listView_2"/>
         </item>
        </layout>
       </widget>
@@ -160,6 +182,14 @@
     <property name="title">
      <string>Options</string>
     </property>
+    <widget class="QMenu" name="menuTheme">
+     <property name="title">
+      <string>Theme</string>
+     </property>
+     <addaction name="actionLight"/>
+     <addaction name="actionDark"/>
+    </widget>
+    <addaction name="menuTheme"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -185,7 +215,19 @@
     <bool>false</bool>
    </attribute>
   </widget>
+  <action name="actionLight">
+   <property name="text">
+    <string>Light</string>
+   </property>
+  </action>
+  <action name="actionDark">
+   <property name="text">
+    <string>Dark</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources/resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

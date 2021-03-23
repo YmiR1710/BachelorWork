@@ -1,6 +1,6 @@
 #include <./include/utils/navigation.h>
 
-void NavigationUtils::open_folder(QFileSystemModel *model, QListView *listView, QLineEdit *lineEdit, QFileInfo fileInfo, const QModelIndex &index) {
+void NavigationUtils::open_folder(QFileSystemModel *model, QTableView *listView, QLineEdit *lineEdit, QFileInfo fileInfo, const QModelIndex &index) {
     lineEdit->setText(fileInfo.absoluteFilePath());
     if (fileInfo.fileName() == "..") {
         QDir dir = fileInfo.dir();

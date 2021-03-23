@@ -20,7 +20,7 @@ void CopyPasteUtils::paste_file(QFileInfo copy_info, QString path) {
         }
         int counter = 1;
         while (!file_to_copy.copy(new_path)) {
-            QString new_path = path;
+            new_path = path;
             new_path.append("/");
             QString text = copy_info.baseName();
             if (copy_info.completeSuffix().size() != 0) {

@@ -1,6 +1,6 @@
 #include <./include/utils/search_filter.h>
 
-void FiltersUtils::search_filter(QString item_name, QListView *listView, QLineEdit *lineEdit, QFileSystemModel *model) {
+void FiltersUtils::search_filter(QString item_name, QTableView *listView, QLineEdit *lineEdit, QFileSystemModel *model) {
     QStringList filters;
     QString request = "*";
     request.append(item_name);
