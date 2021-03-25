@@ -1,6 +1,5 @@
 #include "./include/propertieswindow.h"
-#include <iostream>
-#include <fstream>
+
 PropertiesWindow::PropertiesWindow(QWidget *parent)
     : QTextEdit(parent)
 {
