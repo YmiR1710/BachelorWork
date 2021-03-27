@@ -13,6 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(Qt5Charts)
 
 set(PROJECT_SOURCES
         src/main.cpp
@@ -30,6 +31,11 @@ set(PROJECT_SOURCES
         src/utils/swap_drives.cpp
         src/utils/config_parser.cpp
         src/propertieswindow.cpp
+        src/statisticswidget.cpp
+        src/utils/statistics.cpp
+        src/donutbreakdownchart.cpp
+        src/mainslice.cpp
+        src/discview.cpp
         include/mainwindow.h
         include/global.h
         include/utils/copy_path.h
@@ -45,9 +51,16 @@ set(PROJECT_SOURCES
         include/utils/config_parser.h
         include/properties.h
         include/propertieswindow.h
+        include/statisticswidget.h
         include/panels.h
         include/themes.h
+        include/donutbreakdownchart.h
+        include/mainslice.h
+        include/discview.h
+        include/utils/statistics.h
         ui/mainwindow.ui
+        ui/statisticswidget.ui
+        ui/discview.ui
         resources/resources.qrc
         config/.config
 )
@@ -67,5 +80,5 @@ else()
         )
     endif()
 endif()
-set_target_properties(qExplorer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
-target_link_libraries(qExplorer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+#set_target_properties(qExplorer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+target_link_libraries(qExplorer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt5::Charts)

@@ -4,6 +4,8 @@
 #include "panels.h"
 #include "themes.h"
 #include <QFileSystemModel>
+#include <QColor>
+#include <QList>
 
 extern QModelIndex chosenFile;
 extern QModelIndex copiedFile;
@@ -15,5 +17,6 @@ extern QFileSystemModel *model_2;
 extern qint64 directorySize;
 extern Panel active_panel;
 extern Theme currentTheme;
+extern QList<QColor> colorTheme;
 
 #endif

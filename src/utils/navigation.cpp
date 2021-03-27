@@ -1,5 +1,5 @@
 #include <./include/utils/navigation.h>
-
+#include "QDebug"
 void NavigationUtils::open_folder(QFileSystemModel *model, QTableView *listView, QLineEdit *lineEdit, QFileInfo fileInfo, const QModelIndex &index) {
     lineEdit->setText(fileInfo.absoluteFilePath());
     if (fileInfo.fileName() == "..") {

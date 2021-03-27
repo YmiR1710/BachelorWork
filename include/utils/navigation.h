@@ -2,6 +2,7 @@
 #define NAVIGATION_H
 
 #include "./include/global.h"
+#include "./include/utils/statistics.h"
 #include <QTableView>
 #include <QFileInfo>
 #include <QDir>
