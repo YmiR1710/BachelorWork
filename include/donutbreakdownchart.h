@@ -16,6 +16,9 @@ public:
 private:
     void recalculateAngles();
     void updateLegendMarkers();
+
+private:
     QPieSeries *m_mainSeries;
+};
 
 #endif

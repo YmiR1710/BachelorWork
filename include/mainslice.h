@@ -17,7 +17,7 @@ public:
     void setName(QString name);
     QString name() const;
 
-public slots:
+public Q_SLOTS:
     void updateLabel();
 
 private:
