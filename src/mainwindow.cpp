@@ -62,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->search_2->setVisible(false);
     SwapDrivesUtils::configure_ui(ui->comboBox_1);
     SwapDrivesUtils::configure_ui(ui->comboBox_2);
+    emit ui->statistics->update_charts(QFileInfo(mPath));
     connect(ui->comboBox_1, SIGNAL(textActivated(QString)), this, SLOT(change_root_path(QString)));
     connect(ui->comboBox_2, SIGNAL(textActivated(QString)), this, SLOT(change_root_path(QString)));
     connect(ui->listView_1, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_listView_doubleClicked(QModelIndex)));
@@ -104,8 +105,10 @@ void MainWindow::on_listView_doubleClicked(const QModelIndex &index)
     else if (fileInfo.isSymLink()) {
         if (listView == ui->listView_1) {
             QModelIndex index = model_1->index(fileInfo.symLinkTarget());
+            emit ui->statistics->update_charts(model_1->fileInfo(index));
             NavigationUtils::open_folder(model_1, ui->listView_1, ui->lineEdit_1, model_1->fileInfo(index), index);
         } else {
+            emit ui->statistics->update_charts(model_2->fileInfo(index));
             QModelIndex index = model_2->index(fileInfo.symLinkTarget());
             NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, model_2->fileInfo(index), index);
         }
@@ -117,7 +120,7 @@ void MainWindow::on_listView_doubleClicked(const QModelIndex &index)
     } else {
         NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, fileInfo, index);
     }
-
+    emit ui->statistics->update_charts(fileInfo);
     this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
