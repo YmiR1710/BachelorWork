@@ -10,7 +10,7 @@
 
 class NavigationUtils {
 public:
-    static void open_folder(QFileSystemModel *model, QTableView *listView, QLineEdit *lineEdit, QFileInfo fileInfo, const QModelIndex &index);
+    static void open_folder(QFileSystemModel *model, QTableView *listView, QLineEdit *lineEdit, QFileInfo fileInfo);
 };
 
 #endif

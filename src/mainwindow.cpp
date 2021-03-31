@@ -62,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->search_2->setVisible(false);
     SwapDrivesUtils::configure_ui(ui->comboBox_1);
     SwapDrivesUtils::configure_ui(ui->comboBox_2);
+    setup_cloud_drives();
     emit ui->statistics->update_charts(QFileInfo(mPath));
     connect(ui->comboBox_1, SIGNAL(textActivated(QString)), this, SLOT(change_root_path(QString)));
     connect(ui->comboBox_2, SIGNAL(textActivated(QString)), this, SLOT(change_root_path(QString)));
@@ -106,19 +107,19 @@ void MainWindow::on_listView_doubleClicked(const QModelIndex &index)
         if (listView == ui->listView_1) {
             QModelIndex index = model_1->index(fileInfo.symLinkTarget());
             emit ui->statistics->update_charts(model_1->fileInfo(index));
-            NavigationUtils::open_folder(model_1, ui->listView_1, ui->lineEdit_1, model_1->fileInfo(index), index);
+            NavigationUtils::open_folder(model_1, ui->listView_1, ui->lineEdit_1, model_1->fileInfo(index));
         } else {
             emit ui->statistics->update_charts(model_2->fileInfo(index));
             QModelIndex index = model_2->index(fileInfo.symLinkTarget());
-            NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, model_2->fileInfo(index), index);
+            NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, model_2->fileInfo(index));
         }
         this->setCursor(QCursor(Qt::ArrowCursor));
         return;
     }
     if (listView == ui->listView_1) {
-        NavigationUtils::open_folder(model_1, ui->listView_1, ui->lineEdit_1, fileInfo, index);
+        NavigationUtils::open_folder(model_1, ui->listView_1, ui->lineEdit_1, fileInfo);
     } else {
-        NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, fileInfo, index);
+        NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, fileInfo);
     }
     emit ui->statistics->update_charts(fileInfo);
     this->setCursor(QCursor(Qt::ArrowCursor));
@@ -458,6 +459,16 @@ void MainWindow::open_file() {
     this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
+void MainWindow::open_cloud_drive(QString path) {
+    emit ui->statistics->update_charts(QFileInfo(path));
+    if (active_panel == Panel::PANEL_1) {
+        NavigationUtils::open_folder(model_1, ui->listView_1, ui->lineEdit_1, QFileInfo(path));
+    }
+    else if (active_panel == Panel::PANEL_2) {
+        NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, QFileInfo(path));
+    }
+}
+
 void MainWindow::create_shortcut() {
     this->setCursor(QCursor(Qt::WaitCursor));
     for (auto &c_file : chosenFiles) {
@@ -492,5 +503,13 @@ void MainWindow::configure() {
     }
     else if (currentTheme == Theme::LIGHT) {
         setStyleSheet("QMainWindow {background: 'white';} QTableView {background: 'white'; color:'black'}");
+    }
+}
+
+void MainWindow::setup_cloud_drives() {
+    QList<CloudDrive> drives = CloudDriveUtils::get_supported_drives();
+    for (auto drive : drives) {
+        CloudDriveWidget *driveWidget = new CloudDriveWidget(this, drive.getName(), drive.getImage(), DirectorySizeCalculationUtils::formatSize(drive.getSize()));
+        ui->verticalLayout_4->addWidget(driveWidget);
     }
 }
