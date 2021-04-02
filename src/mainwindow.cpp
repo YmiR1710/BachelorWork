@@ -428,6 +428,7 @@ void MainWindow::line_edit_enter() {
 
 void MainWindow::change_root_path(QString path) {
     QComboBox *box = (QComboBox *)sender();
+    emit ui->statistics->update_charts(QFileInfo(path));
     if (box == ui->comboBox_1) {
         ui->listView_1->setRootIndex(model_1->index(path));
         ui->lineEdit_1->setText(path);
