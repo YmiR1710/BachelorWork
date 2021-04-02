@@ -14,6 +14,10 @@ public:
 
 protected:
     virtual void closeEvent(QCloseEvent *event) override;
+
+private slots:
+    void close_window();
+
 };
 
 #endif

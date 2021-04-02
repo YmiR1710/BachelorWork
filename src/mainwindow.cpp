@@ -21,6 +21,7 @@ qint64 directorySize;
 Panel active_panel;
 Theme currentTheme;
 QStringList existingFavoritePaths;
+Panel favorites_active_panel;
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -460,10 +461,12 @@ void MainWindow::show_favorite_paths() {
     QPushButton *button = (QPushButton *)sender();
     FavoritePathsContainer *container;
     if (button == ui->favoritePathsButton_1) {
-        container = new FavoritePathsContainer(this, ui->lineEdit_1->text());
+        favorites_active_panel = Panel::PANEL_1;
+        container = new FavoritePathsContainer(window, ui->lineEdit_1->text());
     }
     else {
-        container = new FavoritePathsContainer(this, ui->lineEdit_2->text());
+        favorites_active_panel = Panel::PANEL_2;
+        container = new FavoritePathsContainer(window, ui->lineEdit_2->text());
     }
     window->setCentralWidget(container);
     window->setFixedHeight(this->height() / 2);
@@ -491,10 +494,10 @@ void MainWindow::create_shortcut() {
 
 void MainWindow::open_favorite_path(QString path) {
     emit ui->statistics->update_charts(QFileInfo(path));
-    if (active_panel == Panel::PANEL_1) {
+    if (favorites_active_panel == Panel::PANEL_1) {
         NavigationUtils::open_folder(model_1, ui->listView_1, ui->lineEdit_1, QFileInfo(path));
     }
-    else if (active_panel == Panel::PANEL_2) {
+    else if (favorites_active_panel == Panel::PANEL_2) {
         NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, QFileInfo(path));
     }
 }

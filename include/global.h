@@ -19,5 +19,6 @@ extern Panel active_panel;
 extern Theme currentTheme;
 extern QList<QColor> colorTheme;
 extern QStringList existingFavoritePaths;
+extern Panel favorites_active_panel;
 
 #endif

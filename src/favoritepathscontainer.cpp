@@ -24,9 +24,9 @@ FavoritePathsContainer::~FavoritePathsContainer()
 
 void FavoritePathsContainer::add_favorite_path() {
     QString path = ui->lineEdit->text();
-    ui->lineEdit->setText("");
     FavoritePathWidget *newPath = new FavoritePathWidget(this, path);
     if (newPath->validate(path) && !existingFavoritePaths.contains(path)) {
+        ui->lineEdit->setText("");
         ui->contentLayout->addWidget(newPath);
         existingFavoritePaths.append(path);
     }

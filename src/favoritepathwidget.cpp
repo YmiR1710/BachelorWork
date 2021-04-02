@@ -8,7 +8,8 @@ FavoritePathWidget::FavoritePathWidget(QWidget *parent, QString path) :
     ui->okButton->setVisible(false);
     ui->lineEdit->setVisible(false);
     connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(delete_widget()));
-    connect(this, SIGNAL(clicked(QString)), parent->parentWidget(), SLOT(open_favorite_path(QString)));
+    connect(this, SIGNAL(clicked(QString)), parent->parentWidget()->parentWidget(), SLOT(open_favorite_path(QString)));
+    connect(this, SIGNAL(clicked(QString)), parent->parentWidget(), SLOT(close_window()));
     connect(ui->editButton, SIGNAL(clicked()), this, SLOT(edit_path()));
     connect(ui->lineEdit, SIGNAL(returnPressed()), this, SLOT(save_path()));
     connect(ui->okButton, SIGNAL(clicked()), this, SLOT(save_path()));
