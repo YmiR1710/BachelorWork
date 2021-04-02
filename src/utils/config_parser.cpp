@@ -1,16 +1,17 @@
 #include "./include/utils/config_parser.h"
-#include "QDebug"
+
 const std::string ConfigParser::CONFIG_LOCATION = "./config/.config";
 const std::string ConfigParser::TEMP_CONFIG_LOCATION = "./config/.config.temp";
 
 
 void ConfigParser::configure() {
-    parse_theme();
+    parse_config();
 }
 
-void ConfigParser::parse_theme() {
+void ConfigParser::parse_config() {
     std::string line;
     std::fstream fileStream(CONFIG_LOCATION);
+    std::getline(fileStream, line);
     while (std::getline(fileStream, line)) {
         std::istringstream is_line(line);
         std::string key;
@@ -28,6 +29,11 @@ void ConfigParser::parse_theme() {
                     }
                     else {
                         currentTheme = Theme::DARK;
+                    }
+                }
+                if (key == "favorites") {
+                    for (QString path : QString(value.c_str()).split(", ")) {
+
                     }
                 }
             }

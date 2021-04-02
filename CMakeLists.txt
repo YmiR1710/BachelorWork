@@ -36,6 +36,8 @@ set(PROJECT_SOURCES
         src/donutbreakdownchart.cpp
         src/mainslice.cpp
         src/discview.cpp
+        src/favoritepathscontainer.cpp
+        src/favoritepathwidget.cpp
         include/mainwindow.h
         include/global.h
         include/utils/copy_path.h
@@ -58,9 +60,13 @@ set(PROJECT_SOURCES
         include/mainslice.h
         include/discview.h
         include/utils/statistics.h
+        include/favoritepathscontainer.h
+        include/favoritepathwidget.h
         ui/mainwindow.ui
         ui/statisticswidget.ui
         ui/discview.ui
+        ui/favoritepathscontainer.ui
+        ui/favoritepathwidget.ui
         resources/resources.qrc
         config/.config
 )

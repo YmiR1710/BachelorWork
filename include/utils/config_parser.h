@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <QString>
+#include "QDebug"
 
 class ConfigParser
 {
@@ -12,7 +13,7 @@ class ConfigParser
 private:
     static const std::string CONFIG_LOCATION;
     static const std::string TEMP_CONFIG_LOCATION;
-    static void parse_theme();
+    static void parse_config();
     static std::vector<std::string> split(const std::string &str, const char *delim);
 
 public:
