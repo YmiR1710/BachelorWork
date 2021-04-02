@@ -47,11 +47,9 @@ void FavoritePathWidget::edit_path() {
 }
 
 void FavoritePathWidget::save_path() {
-    if (validate(ui->lineEdit->text())) {
-        if (!existingFavoritePaths.contains(ui->lineEdit->text())) {
-            existingFavoritePaths.append(ui->lineEdit->text());
-            existingFavoritePaths.removeOne(ui->label->text());
-        }
+    if (validate(ui->lineEdit->text()) && !existingFavoritePaths.contains(ui->lineEdit->text())) {
+        existingFavoritePaths.append(ui->lineEdit->text());
+        existingFavoritePaths.removeOne(ui->label->text());
         ui->label->setText(ui->lineEdit->text());
         ui->lineEdit->setVisible(false);
         ui->lineEdit->clear();
