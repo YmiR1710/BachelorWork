@@ -19,6 +19,7 @@ private:
 public:
     static void configure();
     static void change_config(QString key, QString value);
+    static QString list_to_string(QStringList list);
 };
 
 #endif

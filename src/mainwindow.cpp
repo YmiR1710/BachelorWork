@@ -28,10 +28,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    existingFavoritePaths = QStringList();
     configure();
     model_1 = new QFileSystemModel(this);
     model_2 = new QFileSystemModel(this);
-    existingFavoritePaths = QStringList();
     model_1->setFilter(QDir::QDir::AllEntries | QDir::QDir::NoDot);
     model_1->setRootPath(mPath);
     model_2->setFilter(QDir::QDir::AllEntries | QDir::QDir::NoDot);
@@ -456,7 +456,7 @@ void MainWindow::close_search() {
 }
 
 void MainWindow::show_favorite_paths() {
-    QMainWindow *window = new QMainWindow(this);
+    FavoritesMainWindow *window = new FavoritesMainWindow(this);
     QPushButton *button = (QPushButton *)sender();
     FavoritePathsContainer *container;
     if (button == ui->favoritePathsButton_1) {

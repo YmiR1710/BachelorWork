@@ -17,6 +17,7 @@
 #include "./include/properties.h"
 #include "./include/propertieswindow.h"
 #include "./include/favoritepathscontainer.h"
+#include "./include/favoritesmainwindow.h"
 #include <QMainWindow>
 #include <QDialog>
 #include <QFileSystemModel>

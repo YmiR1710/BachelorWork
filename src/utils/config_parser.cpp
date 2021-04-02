@@ -11,7 +11,6 @@ void ConfigParser::configure() {
 void ConfigParser::parse_config() {
     std::string line;
     std::fstream fileStream(CONFIG_LOCATION);
-    std::getline(fileStream, line);
     while (std::getline(fileStream, line)) {
         std::istringstream is_line(line);
         std::string key;
@@ -32,8 +31,8 @@ void ConfigParser::parse_config() {
                     }
                 }
                 if (key == "favorites") {
-                    for (QString path : QString(value.c_str()).split(", ")) {
-
+                    for (QString path : QString(value.c_str()).split(",")) {
+                        existingFavoritePaths.append(path);
                     }
                 }
             }
@@ -47,15 +46,12 @@ void ConfigParser::change_config(QString key, QString value) {
     std::ofstream out(TEMP_CONFIG_LOCATION);
     std::string strTemp;
     const char *delim = "=";
-    bool found = false;
-    while (in >> strTemp) {
+    while (std::getline(in, strTemp)) {
         if (split(strTemp, delim)[0] == key.toStdString()) {
             strTemp = key.append(delim).append(value).toStdString();
-            found = true;
         }
         strTemp += "\n";
         out << strTemp;
-        if (found) break;
     }
     in.close();
     out.close();
@@ -73,4 +69,11 @@ std::vector<std::string> ConfigParser::split(const std::string &str, const char 
     }
     free(pTempStr);
     return dest;
+}
+
+QString ConfigParser::list_to_string(QStringList list) {
+    QString result = "";
+    for (QString string : list)
+        result.append(string + ",");
+    return result.remove(result.size() - 1, 1);
 }
