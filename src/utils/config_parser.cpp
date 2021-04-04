@@ -1,14 +1,14 @@
 #include "./include/utils/config_parser.h"
-#include "QDebug"
+
 const std::string ConfigParser::CONFIG_LOCATION = "./config/.config";
 const std::string ConfigParser::TEMP_CONFIG_LOCATION = "./config/.config.temp";
 
 
 void ConfigParser::configure() {
-    parse_theme();
+    parse_config();
 }
 
-void ConfigParser::parse_theme() {
+void ConfigParser::parse_config() {
     std::string line;
     std::fstream fileStream(CONFIG_LOCATION);
     while (std::getline(fileStream, line)) {
@@ -30,6 +30,11 @@ void ConfigParser::parse_theme() {
                         currentTheme = Theme::DARK;
                     }
                 }
+                if (key == "favorites") {
+                    for (QString path : QString(value.c_str()).split(",")) {
+                        existingFavoritePaths.append(path);
+                    }
+                }
             }
         }
     }
@@ -41,15 +46,12 @@ void ConfigParser::change_config(QString key, QString value) {
     std::ofstream out(TEMP_CONFIG_LOCATION);
     std::string strTemp;
     const char *delim = "=";
-    bool found = false;
-    while (in >> strTemp) {
+    while (std::getline(in, strTemp)) {
         if (split(strTemp, delim)[0] == key.toStdString()) {
             strTemp = key.append(delim).append(value).toStdString();
-            found = true;
         }
         strTemp += "\n";
         out << strTemp;
-        if (found) break;
     }
     in.close();
     out.close();
@@ -67,4 +69,11 @@ std::vector<std::string> ConfigParser::split(const std::string &str, const char 
     }
     free(pTempStr);
     return dest;
+}
+
+QString ConfigParser::list_to_string(QStringList list) {
+    QString result = "";
+    for (QString string : list)
+        result.append(string + ",");
+    return result.remove(result.size() - 1, 1);
 }

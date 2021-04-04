@@ -36,6 +36,9 @@ set(PROJECT_SOURCES
         src/donutbreakdownchart.cpp
         src/mainslice.cpp
         src/discview.cpp
+        src/favoritepathscontainer.cpp
+        src/favoritepathwidget.cpp
+        src/favoritesmainwindow.cpp
         include/mainwindow.h
         include/global.h
         include/utils/copy_path.h
@@ -58,9 +61,14 @@ set(PROJECT_SOURCES
         include/mainslice.h
         include/discview.h
         include/utils/statistics.h
+        include/favoritepathscontainer.h
+        include/favoritepathwidget.h
+        include/favoritesmainwindow.h
         ui/mainwindow.ui
         ui/statisticswidget.ui
         ui/discview.ui
+        ui/favoritepathscontainer.ui
+        ui/favoritepathwidget.ui
         resources/resources.qrc
         config/.config
 )
@@ -80,5 +88,5 @@ else()
         )
     endif()
 endif()
-#set_target_properties(qExplorer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+set_target_properties(qExplorer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 target_link_libraries(qExplorer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt5::Charts)

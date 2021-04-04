@@ -16,6 +16,8 @@
 #include "./include/utils/config_parser.h"
 #include "./include/properties.h"
 #include "./include/propertieswindow.h"
+#include "./include/favoritepathscontainer.h"
+#include "./include/favoritesmainwindow.h"
 #include <QMainWindow>
 #include <QDialog>
 #include <QFileSystemModel>
@@ -66,6 +68,8 @@ private slots:
     void create_shortcut();
     void change_root_path(QString path);
     void change_theme();
+    void show_favorite_paths();
+    void open_favorite_path(QString path);
 
 
 private:
