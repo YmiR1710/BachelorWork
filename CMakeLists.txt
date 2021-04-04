@@ -33,9 +33,12 @@ set(PROJECT_SOURCES
         src/propertieswindow.cpp
         src/statisticswidget.cpp
         src/utils/statistics.cpp
+        src/utils/cloud_drives.cpp
         src/donutbreakdownchart.cpp
         src/mainslice.cpp
         src/discview.cpp
+        src/cloud_drive_entity.cpp
+        src/clouddrivewidget.cpp
         src/favoritepathscontainer.cpp
         src/favoritepathwidget.cpp
         src/favoritesmainwindow.cpp
@@ -52,6 +55,7 @@ set(PROJECT_SOURCES
         include/utils/delete_unit.h
         include/utils/swap_drives.h
         include/utils/config_parser.h
+        include/utils/cloud_drives.h
         include/properties.h
         include/propertieswindow.h
         include/statisticswidget.h
@@ -61,6 +65,12 @@ set(PROJECT_SOURCES
         include/mainslice.h
         include/discview.h
         include/utils/statistics.h
+        include/clouddrivewidget.h
+        include/cloud_drive_entity.h
+        ui/mainwindow.ui
+        ui/statisticswidget.ui
+        ui/discview.ui
+        ui/clouddrivewidget.ui
         include/favoritepathscontainer.h
         include/favoritepathwidget.h
         include/favoritesmainwindow.h

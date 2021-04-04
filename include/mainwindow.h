@@ -16,6 +16,9 @@
 #include "./include/utils/config_parser.h"
 #include "./include/properties.h"
 #include "./include/propertieswindow.h"
+#include "./include/utils/cloud_drives.h"
+#include "./include/cloud_drive_entity.h"
+#include "./include/clouddrivewidget.h"
 #include "./include/favoritepathscontainer.h"
 #include "./include/favoritesmainwindow.h"
 #include <QMainWindow>
@@ -33,6 +36,7 @@
 #include <QScreen>
 #include <QGuiApplication>
 #include "QDebug"
+#include <QList>
 
 
 QT_BEGIN_NAMESPACE
@@ -68,6 +72,7 @@ private slots:
     void create_shortcut();
     void change_root_path(QString path);
     void change_theme();
+    void open_cloud_drive(QString path);
     void show_favorite_paths();
     void open_favorite_path(QString path);
 
@@ -75,5 +80,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     void configure();
+    void setup_cloud_drives();
 };
 #endif
