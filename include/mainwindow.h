@@ -19,6 +19,8 @@
 #include "./include/utils/cloud_drives.h"
 #include "./include/cloud_drive_entity.h"
 #include "./include/clouddrivewidget.h"
+#include "./include/favoritepathscontainer.h"
+#include "./include/favoritesmainwindow.h"
 #include <QMainWindow>
 #include <QDialog>
 #include <QFileSystemModel>
@@ -71,6 +73,8 @@ private slots:
     void change_root_path(QString path);
     void change_theme();
     void open_cloud_drive(QString path);
+    void show_favorite_paths();
+    void open_favorite_path(QString path);
 
 
 private:

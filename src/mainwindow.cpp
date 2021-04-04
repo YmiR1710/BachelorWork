@@ -1,7 +1,7 @@
 #include "./include/mainwindow.h"
 
 #if defined(_WIN32)
-QString mPath = "C:\\";
+QString mPath = "C:/";
 #endif
 #if defined(unix) || defined(__unix__) || defined(__unix)
 QString mPath = "/";
@@ -20,6 +20,8 @@ QFileSystemModel *model_2;
 qint64 directorySize;
 Panel active_panel;
 Theme currentTheme;
+QStringList existingFavoritePaths;
+Panel favorites_active_panel;
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -27,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    existingFavoritePaths = QStringList();
     configure();
     model_1 = new QFileSystemModel(this);
     model_2 = new QFileSystemModel(this);
@@ -80,6 +83,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->search_2, SIGNAL(returnPressed()), SLOT(searchEnter()));
     connect(ui->actionDark, SIGNAL(triggered()), this, SLOT(change_theme()));
     connect(ui->actionLight, SIGNAL(triggered()), this, SLOT(change_theme()));
+    connect(ui->favoritePathsButton_1, SIGNAL(clicked()), this, SLOT(show_favorite_paths()));
+    connect(ui->favoritePathsButton_2, SIGNAL(clicked()), this, SLOT(show_favorite_paths()));
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_C), this, SLOT(copy_file()));
     new QShortcut(QKeySequence(Qt::Key_Escape), this, SLOT(close_search()));
 //    new QShortcut(QKeySequence(Qt::Key_Delete), this, SLOT(delete_file())); TODO
@@ -424,6 +429,7 @@ void MainWindow::line_edit_enter() {
 
 void MainWindow::change_root_path(QString path) {
     QComboBox *box = (QComboBox *)sender();
+    emit ui->statistics->update_charts(QFileInfo(path));
     if (box == ui->comboBox_1) {
         ui->listView_1->setRootIndex(model_1->index(path));
         ui->lineEdit_1->setText(path);
@@ -452,6 +458,25 @@ void MainWindow::close_search() {
     model_2->setNameFilters(filters);
 }
 
+void MainWindow::show_favorite_paths() {
+    FavoritesMainWindow *window = new FavoritesMainWindow(this);
+    QPushButton *button = (QPushButton *)sender();
+    FavoritePathsContainer *container;
+    if (button == ui->favoritePathsButton_1) {
+        favorites_active_panel = Panel::PANEL_1;
+        container = new FavoritePathsContainer(window, ui->lineEdit_1->text());
+    }
+    else {
+        favorites_active_panel = Panel::PANEL_2;
+        container = new FavoritePathsContainer(window, ui->lineEdit_2->text());
+    }
+    window->setCentralWidget(container);
+    window->setFixedHeight(this->height() / 2);
+    window->setFixedWidth(this->width() / 4);
+    window->setWindowTitle("Favorites");
+    window->show();
+}
+
 void MainWindow::open_file() {
     this->setCursor(QCursor(Qt::WaitCursor));
     QFileInfo fileInfo = model_1->fileInfo(chosenFile);
@@ -477,6 +502,16 @@ void MainWindow::create_shortcut() {
     }
     this->setCursor(QCursor(Qt::ArrowCursor));
     chosenFiles.clear();
+}
+
+void MainWindow::open_favorite_path(QString path) {
+    emit ui->statistics->update_charts(QFileInfo(path));
+    if (favorites_active_panel == Panel::PANEL_1) {
+        NavigationUtils::open_folder(model_1, ui->listView_1, ui->lineEdit_1, QFileInfo(path));
+    }
+    else if (favorites_active_panel == Panel::PANEL_2) {
+        NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, QFileInfo(path));
+    }
 }
 
 void MainWindow::change_theme() {
