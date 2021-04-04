@@ -56,6 +56,12 @@ void FavoritePathWidget::save_path() {
         ui->okButton->setVisible(false);
         ui->label->setVisible(true);
     }
+    else if (ui->lineEdit->text() == ui->label->text()) {
+        ui->lineEdit->setVisible(false);
+        ui->lineEdit->clear();
+        ui->okButton->setVisible(false);
+        ui->label->setVisible(true);
+    }
 }
 
 bool FavoritePathWidget::validate(QString path) {
