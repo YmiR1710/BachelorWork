@@ -6,6 +6,7 @@ PropertiesWindow::PropertiesWindow(QWidget *parent)
 
 }
 
-void PropertiesWindow::changeTextSlot(const QString &message) {
+void PropertiesWindow::changeTextSlot(const QString &message)
+{
     this->setText(message);
 }

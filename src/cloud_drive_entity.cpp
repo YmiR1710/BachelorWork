@@ -1,33 +1,41 @@
 #include "./include/cloud_drive_entity.h"
 
-void CloudDrive::setName(QString name) {
+void CloudDrive::setName(QString name)
+{
     this->name = name;
 }
 
-QString CloudDrive::getName() {
+QString CloudDrive::getName()
+{
     return name;
 }
 
-void CloudDrive::setPath(QString path) {
+void CloudDrive::setPath(QString path)
+{
     this->path = path;
 }
 
-QString CloudDrive::getPath() {
+QString CloudDrive::getPath()
+{
     return path;
 }
 
-void CloudDrive::setSize(qint64 size) {
+void CloudDrive::setSize(qint64 size)
+{
     this->size = size;
 }
 
-qint64 CloudDrive::getSize() {
+qint64 CloudDrive::getSize()
+{
     return size;
 }
 
-void CloudDrive::setImage(QPixmap image) {
+void CloudDrive::setImage(QPixmap image)
+{
     this->image = image;
 }
 
-QPixmap CloudDrive::getImage() {
+QPixmap CloudDrive::getImage()
+{
     return image;
 }

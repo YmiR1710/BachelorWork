@@ -94,11 +94,13 @@ MainWindow::MainWindow(QWidget *parent)
 //    new QShortcut(QKeySequence(Qt::Key_Delete), this, SLOT(delete_file())); TODO
 }
 
-MainWindow::~MainWindow() {
+MainWindow::~MainWindow()
+{
     delete ui;
 }
 
-void MainWindow::click(const QModelIndex &index) {
+void MainWindow::click(const QModelIndex &index)
+{
     chosenFile = index.siblingAtColumn(0);
 }
 
@@ -111,8 +113,7 @@ void MainWindow::on_listView_doubleClicked(const QModelIndex &index)
         QDesktopServices::openUrl(QUrl(fileInfo.absoluteFilePath().prepend("file:///")));
         this->setCursor(QCursor(Qt::ArrowCursor));
         return;
-    }
-    else if (fileInfo.isSymLink()) {
+    } else if (fileInfo.isSymLink()) {
         if (listView == ui->listView_1) {
             QModelIndex index = model_1->index(fileInfo.symLinkTarget());
             emit ui->statistics->update_charts(model_1->fileInfo(index));
@@ -134,7 +135,8 @@ void MainWindow::on_listView_doubleClicked(const QModelIndex &index)
     this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
-void MainWindow::show_hide_search_1() {
+void MainWindow::show_hide_search_1()
+{
     if (ui->search_1->isVisible()) {
         ui->search_1->setVisible(false);
     } else {
@@ -142,7 +144,8 @@ void MainWindow::show_hide_search_1() {
     }
 }
 
-void MainWindow::show_hide_search_2() {
+void MainWindow::show_hide_search_2()
+{
     if (ui->search_2->isVisible()) {
         ui->search_2->setVisible(false);
     } else {
@@ -150,7 +153,8 @@ void MainWindow::show_hide_search_2() {
     }
 }
 
-void MainWindow::delete_file() {
+void MainWindow::delete_file()
+{
     QMessageBox::StandardButton reply;
     QString question = "Are you sure you want to delete " + QString::number(chosenFiles.size()) +
                        " files?";
@@ -165,7 +169,8 @@ void MainWindow::delete_file() {
     chosenFiles.clear();
 }
 
-void MainWindow::rename_file() {
+void MainWindow::rename_file()
+{
     bool result;
     QFileInfo info = model_1->fileInfo(chosenFile);
     QString name = info.baseName();
@@ -194,17 +199,16 @@ void MainWindow::rename_file() {
     }
 }
 
-void MainWindow::get_properties() {
+void MainWindow::get_properties()
+{
     this->setCursor(QCursor(Qt::WaitCursor));
     QFileInfo info(ui->lineEdit_1->text());
     if (chosenFile.isValid()) {
         info = model_1->fileInfo(chosenFile);
-    }
-    else {
+    } else {
         if (active_panel == Panel::PANEL_1) {
             info = QFileInfo(ui->lineEdit_1->text());
-        }
-        else if (active_panel == Panel::PANEL_2) {
+        } else if (active_panel == Panel::PANEL_2) {
             info = QFileInfo(ui->lineEdit_2->text());
         }
     }
@@ -264,34 +268,34 @@ void MainWindow::get_properties() {
     widget->exec();
 }
 
-void MainWindow::copy_file() {
+void MainWindow::copy_file()
+{
     if (chosenFiles.empty()) {
         copiedFiles.append(chosenFile);
-    }
-    else {
+    } else {
         copiedFiles = chosenFiles;
     }
 }
 
-void MainWindow::cut_file() {
+void MainWindow::cut_file()
+{
     if (chosenFiles.empty()) {
         copiedFiles.append(chosenFile);
-    }
-    else {
+    } else {
         copiedFiles = chosenFiles;
     }
     to_cut = true;
 }
 
-void MainWindow::paste_file() {
+void MainWindow::paste_file()
+{
     this->setCursor(QCursor(Qt::WaitCursor));
     for (auto &c_file : copiedFiles) {
         QFileInfo copy_info = model_1->fileInfo(c_file);
         QString path;
         if (active_panel == Panel::PANEL_1) {
             path = ui->lineEdit_1->text();
-        }
-        else if (active_panel == Panel::PANEL_2) {
+        } else if (active_panel == Panel::PANEL_2) {
             path = ui->lineEdit_2->text();
         }
         if (copy_info.isDir() && !copy_info.isSymLink()) {
@@ -314,7 +318,8 @@ void MainWindow::paste_file() {
     this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
-void MainWindow::create_file() {
+void MainWindow::create_file()
+{
     bool result;
     QString text = QInputDialog::getText(this, tr("Create"),
                                          tr("New file:"), QLineEdit::Normal,
@@ -322,14 +327,14 @@ void MainWindow::create_file() {
     if (result) {
         if (active_panel == Panel::PANEL_1) {
             CreationUtils::create_unit(text, ui->lineEdit_1->text(), false);
-        }
-        else if (active_panel == Panel::PANEL_2) {
+        } else if (active_panel == Panel::PANEL_2) {
             CreationUtils::create_unit(text, ui->lineEdit_2->text(), false);
         }
     }
 }
 
-void MainWindow::create_folder() {
+void MainWindow::create_folder()
+{
     bool result;
     QString text = QInputDialog::getText(this, tr("Create"),
                                          tr("New folder:"), QLineEdit::Normal,
@@ -337,20 +342,19 @@ void MainWindow::create_folder() {
     if (result) {
         if (active_panel == Panel::PANEL_1) {
             CreationUtils::create_unit(text, ui->lineEdit_1->text(), true);
-        }
-        else if (active_panel == Panel::PANEL_2) {
+        } else if (active_panel == Panel::PANEL_2) {
             CreationUtils::create_unit(text, ui->lineEdit_2->text(), true);
         }
     }
 }
 
-void MainWindow::custom_menu_requested(const QPoint &pos) {
+void MainWindow::custom_menu_requested(const QPoint &pos)
+{
     QTableView *listView = (QTableView *)sender();
     QModelIndex index = listView->indexAt(pos);
     if (listView == ui->listView_1) {
         active_panel = Panel::PANEL_1;
-    }
-    else if ( listView == ui->listView_2) {
+    } else if ( listView == ui->listView_2) {
         active_panel = Panel::PANEL_2;
     }
     QModelIndexList list = listView->selectionModel()->selectedIndexes();
@@ -410,41 +414,41 @@ void MainWindow::custom_menu_requested(const QPoint &pos) {
     }
 }
 
-void MainWindow::line_edit_enter() {
+void MainWindow::line_edit_enter()
+{
     QLineEdit *line = (QLineEdit *)sender();
     QString path = line->text();
     QDir dir(path);
     QModelIndex idx;
     if (line == ui->search_1) {
         idx = model_1->index(path);
-    }
-    else {
+    } else {
         idx = model_2->index(path);
     }
     if (dir.exists()) {
         if (line == ui->lineEdit_1) {
             ui->listView_1->setRootIndex(idx);
-        }
-        else {
+        } else {
             ui->listView_2->setRootIndex(idx);
         }
     }
 }
 
-void MainWindow::change_root_path(QString path) {
+void MainWindow::change_root_path(QString path)
+{
     QComboBox *box = (QComboBox *)sender();
     emit ui->statistics->update_charts(QFileInfo(path));
     if (box == ui->comboBox_1) {
         ui->listView_1->setRootIndex(model_1->index(path));
         ui->lineEdit_1->setText(path);
-    }
-    else if (box == ui->comboBox_2) {
+    } else if (box == ui->comboBox_2) {
         ui->listView_2->setRootIndex(model_2->index(path));
         ui->lineEdit_2->setText(path);
     }
 }
 
-void MainWindow::searchEnter() {
+void MainWindow::searchEnter()
+{
     QLineEdit *line = (QLineEdit *)sender();
     QString item_name = line->text();
     if (line == ui->search_1) {
@@ -454,7 +458,8 @@ void MainWindow::searchEnter() {
     }
 }
 
-void MainWindow::close_search() {
+void MainWindow::close_search()
+{
     ui->search_1->setVisible(false);
     ui->search_2->setVisible(false);
     QStringList filters;
@@ -462,15 +467,15 @@ void MainWindow::close_search() {
     model_2->setNameFilters(filters);
 }
 
-void MainWindow::show_favorite_paths() {
+void MainWindow::show_favorite_paths()
+{
     FavoritesMainWindow *window = new FavoritesMainWindow(this);
     QPushButton *button = (QPushButton *)sender();
     FavoritePathsContainer *container;
     if (button == ui->favoritePathsButton_1) {
         favorites_active_panel = Panel::PANEL_1;
         container = new FavoritePathsContainer(window, ui->lineEdit_1->text());
-    }
-    else {
+    } else {
         favorites_active_panel = Panel::PANEL_2;
         container = new FavoritePathsContainer(window, ui->lineEdit_2->text());
     }
@@ -481,24 +486,26 @@ void MainWindow::show_favorite_paths() {
     window->show();
 }
 
-void MainWindow::open_file() {
+void MainWindow::open_file()
+{
     this->setCursor(QCursor(Qt::WaitCursor));
     QFileInfo fileInfo = model_1->fileInfo(chosenFile);
     QDesktopServices::openUrl(QUrl(fileInfo.absoluteFilePath().prepend("file:///")));
     this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
-void MainWindow::open_cloud_drive(QString path) {
+void MainWindow::open_cloud_drive(QString path)
+{
     emit ui->statistics->update_charts(QFileInfo(path));
     if (active_panel == Panel::PANEL_1) {
         NavigationUtils::open_folder(model_1, ui->listView_1, ui->lineEdit_1, QFileInfo(path));
-    }
-    else if (active_panel == Panel::PANEL_2) {
+    } else if (active_panel == Panel::PANEL_2) {
         NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, QFileInfo(path));
     }
 }
 
-void MainWindow::create_shortcut() {
+void MainWindow::create_shortcut()
+{
     this->setCursor(QCursor(Qt::WaitCursor));
     for (auto &c_file : chosenFiles) {
         QString absolutePath = model_1->fileInfo(c_file).absoluteFilePath();
@@ -508,17 +515,18 @@ void MainWindow::create_shortcut() {
     chosenFiles.clear();
 }
 
-void MainWindow::open_favorite_path(QString path) {
+void MainWindow::open_favorite_path(QString path)
+{
     emit ui->statistics->update_charts(QFileInfo(path));
     if (favorites_active_panel == Panel::PANEL_1) {
         NavigationUtils::open_folder(model_1, ui->listView_1, ui->lineEdit_1, QFileInfo(path));
-    }
-    else if (favorites_active_panel == Panel::PANEL_2) {
+    } else if (favorites_active_panel == Panel::PANEL_2) {
         NavigationUtils::open_folder(model_2, ui->listView_2, ui->lineEdit_2, QFileInfo(path));
     }
 }
 
-void MainWindow::change_theme() {
+void MainWindow::change_theme()
+{
     QAction *action = (QAction *)sender();
     if (action == ui->actionDark) {
         ConfigParser::change_config(QString("theme"), QString("DARK"));
@@ -527,8 +535,7 @@ void MainWindow::change_theme() {
         QFile fileDark(":/ui/styles/dark.qss");
         fileDark.open(QFile::ReadOnly);
         setStyleSheet(fileDark.readAll());
-    }
-    else if (action == ui->actionLight) {
+    } else if (action == ui->actionLight) {
         ConfigParser::change_config(QString("theme"), QString("LIGHT"));
         currentTheme = Theme::LIGHT;
         ui->statistics->updateChartsTheme(Theme::LIGHT);
@@ -538,7 +545,8 @@ void MainWindow::change_theme() {
     }
 }
 
-void MainWindow::configure() {
+void MainWindow::configure()
+{
     setWindowTitle("QExplorer");
     QList<QScreen *> rec = QGuiApplication::screens();
     resize(rec.first()->availableGeometry().width() / 1.5, rec.first()->availableGeometry().height() / 1.5);
@@ -547,8 +555,7 @@ void MainWindow::configure() {
         QFile fileDark(":/ui/styles/dark.qss");
         fileDark.open(QFile::ReadOnly);
         setStyleSheet(fileDark.readAll());
-    }
-    else if (currentTheme == Theme::LIGHT) {
+    } else if (currentTheme == Theme::LIGHT) {
         QFile fileLight(":/ui/styles/light.qss");
         fileLight.open(QFile::ReadOnly);
         setStyleSheet(fileLight.readAll());

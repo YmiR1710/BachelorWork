@@ -22,7 +22,8 @@ FavoritePathsContainer::~FavoritePathsContainer()
     delete ui;
 }
 
-void FavoritePathsContainer::add_favorite_path() {
+void FavoritePathsContainer::add_favorite_path()
+{
     QString path = ui->lineEdit->text();
     FavoritePathWidget *newPath = new FavoritePathWidget(this, path);
     if (newPath->validate(path) && !existingFavoritePaths.contains(path)) {

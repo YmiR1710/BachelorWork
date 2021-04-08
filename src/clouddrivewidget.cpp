@@ -27,18 +27,21 @@ CloudDriveWidget::~CloudDriveWidget()
     delete ui;
 }
 
-void CloudDriveWidget::mousePressEvent(QMouseEvent *event) {
+void CloudDriveWidget::mousePressEvent(QMouseEvent *event)
+{
     emit clicked(QDir::homePath() + "/" + ui->driveName->text());
 }
 
-void CloudDriveWidget::paintEvent(QPaintEvent *) {
+void CloudDriveWidget::paintEvent(QPaintEvent *)
+{
     QStyleOption opt;
     opt.init(this);
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void CloudDriveWidget::open_close_details() {
+void CloudDriveWidget::open_close_details()
+{
     if (defaultMode) {
         ui->driveName->setVisible(false);
         ui->userName->setVisible(false);
@@ -60,8 +63,7 @@ void CloudDriveWidget::open_close_details() {
                                distribution.value("Programming file") + distribution.value("Executable") + distribution.value("Data") + distribution.value("Archive")));
         ui->cloudDriveDetailsButton->setText("Close");
         defaultMode = false;
-    }
-    else {
+    } else {
         ui->driveName->setVisible(true);
         ui->userName->setVisible(true);
         ui->driveSize->setVisible(true);

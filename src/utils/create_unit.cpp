@@ -1,15 +1,16 @@
 #include "./include/utils/create_unit.h"
 
-void CreationUtils::create_unit(QString text, QString path, bool isFolder) {
+void CreationUtils::create_unit(QString text, QString path, bool isFolder)
+{
     if (isFolder) {
         create_folder(text, path);
-    }
-    else {
+    } else {
         create_file(text, path);
     }
 }
 
-void CreationUtils::create_file(QString text, QString path) {
+void CreationUtils::create_file(QString text, QString path)
+{
     int counter = 1;
     path.append("/");
     path.append(text);
@@ -30,14 +31,14 @@ void CreationUtils::create_file(QString text, QString path) {
             }
             counter++;
         }
-    }
-    else {
+    } else {
         newFile.open(QFile::WriteOnly);
     }
     newFile.close();
 }
 
-void CreationUtils::create_folder(QString text, QString path) {
+void CreationUtils::create_folder(QString text, QString path)
+{
     int counter = 1;
     path.append("/");
     path.append(text);
@@ -58,8 +59,7 @@ void CreationUtils::create_folder(QString text, QString path) {
             }
             counter++;
         }
-    }
-    else {
+    } else {
         newFolder.mkpath(".");
     }
 }

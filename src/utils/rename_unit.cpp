@@ -1,6 +1,7 @@
 #include <./include/utils/rename_unit.h>
 
-void RenameUtils::rename_unit(QFileInfo info, QString text, bool isFolder) {
+void RenameUtils::rename_unit(QFileInfo info, QString text, bool isFolder)
+{
     if (isFolder) {
         rename_folder(info, text);
     } else {
@@ -8,7 +9,8 @@ void RenameUtils::rename_unit(QFileInfo info, QString text, bool isFolder) {
     }
 }
 
-void RenameUtils::rename_file(QFileInfo info, QString text) {
+void RenameUtils::rename_file(QFileInfo info, QString text)
+{
     int counter = 1;
     QFile file(info.absoluteFilePath());
     QString new_path = info.absolutePath();
@@ -26,7 +28,8 @@ void RenameUtils::rename_file(QFileInfo info, QString text) {
     }
 }
 
-void RenameUtils::rename_folder(QFileInfo info, QString text) {
+void RenameUtils::rename_folder(QFileInfo info, QString text)
+{
     int counter = 1;
     QDir dir(info.absoluteFilePath());
     QString new_path = info.absolutePath();

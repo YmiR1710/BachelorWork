@@ -37,8 +37,7 @@ StatisticsWidget::StatisticsWidget(QWidget *parent) :
     donutBreakdown->setContentsMargins(-60, -60, -60, -60);
     if (currentTheme == Theme::DARK) {
         donutBreakdown->setPlotAreaBackgroundBrush(QBrush(QColor("#2B2C2D")));
-    }
-    else if (currentTheme == Theme::LIGHT) {
+    } else if (currentTheme == Theme::LIGHT) {
         donutBreakdown->setPlotAreaBackgroundBrush(QBrush(QColor("#FFFFFF")));
     }
     donutBreakdown->setPlotAreaBackgroundVisible(true);
@@ -66,7 +65,8 @@ StatisticsWidget::~StatisticsWidget()
     delete ui;
 }
 
-void StatisticsWidget::paint_statistics(QFileInfo info) {
+void StatisticsWidget::paint_statistics(QFileInfo info)
+{
     QPieSeries *series = new QPieSeries();
     QMapIterator<QString, int> it(StatisticsUtils::get_types_distribution_by_count(info));
     while (it.hasNext()) {
@@ -84,8 +84,7 @@ void StatisticsWidget::paint_statistics(QFileInfo info) {
             slice->setLabelColor(QColor("#BABABF"));
         }
         typesChart->setPlotAreaBackgroundBrush(QBrush(QColor("#2B2C2D")));
-    }
-    else if (currentTheme == Theme::LIGHT) {
+    } else if (currentTheme == Theme::LIGHT) {
         typesChart->setTheme(QChart::ChartThemeHighContrast);
         for (QPieSlice *slice : series->slices()) {
             slice->setLabelColor(QColor("#101012"));
@@ -98,7 +97,8 @@ void StatisticsWidget::paint_statistics(QFileInfo info) {
     ui->typesDistribution->setRenderHint(QPainter::Antialiasing);
 }
 
-void StatisticsWidget::setup_cloud_drives() {
+void StatisticsWidget::setup_cloud_drives()
+{
     QList<CloudDrive> drives = CloudDriveUtils::get_supported_drives();
     for (auto drive : drives) {
         CloudDriveWidget *driveWidget = new CloudDriveWidget(this->parentWidget()->parentWidget()->parentWidget()->parentWidget(), drive.getName(), drive.getImage(), DirectorySizeCalculationUtils::formatSize(drive.getSize()));
@@ -106,14 +106,14 @@ void StatisticsWidget::setup_cloud_drives() {
     }
 }
 
-void StatisticsWidget::updateChartsTheme(Theme theme) {
+void StatisticsWidget::updateChartsTheme(Theme theme)
+{
     if (currentChartsTheme != theme) {
         if (theme == Theme::DARK) {
             typesChart->setTheme(QChart::ChartThemeHighContrast);
             typesChart->setPlotAreaBackgroundBrush(QBrush(QColor("#2B2C2D")));
             donutBreakdown->setPlotAreaBackgroundBrush(QBrush(QColor("#2B2C2D")));
-        }
-        else if (theme == Theme::LIGHT) {
+        } else if (theme == Theme::LIGHT) {
             typesChart->setTheme(QChart::ChartThemeHighContrast);
             typesChart->setPlotAreaBackgroundBrush(QBrush(QColor("#FFFFFF")));
             donutBreakdown->setPlotAreaBackgroundBrush(QBrush(QColor("#FFFFFF")));

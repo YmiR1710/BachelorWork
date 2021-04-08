@@ -1,11 +1,13 @@
 #include "./include/utils/dir_size.h"
 
-void DirectorySizeCalculationUtils::dirSizeWrap(QString dirPath, Properties *properties, PropertiesWindow *widget) {
+void DirectorySizeCalculationUtils::dirSizeWrap(QString dirPath, Properties *properties, PropertiesWindow *widget)
+{
     dirSize(dirPath, properties, widget);
     directorySize = 0;
 }
 
-void DirectorySizeCalculationUtils::dirSize(QString dirPath, Properties *properties, PropertiesWindow *widget) {
+void DirectorySizeCalculationUtils::dirSize(QString dirPath, Properties *properties, PropertiesWindow *widget)
+{
     bool wasActive = false;
     QDir dir(dirPath);
     QDir::Filters fileFilters = QDir::Files | QDir::System | QDir::Hidden;
@@ -27,7 +29,8 @@ void DirectorySizeCalculationUtils::dirSize(QString dirPath, Properties *propert
     }
 }
 
-QString DirectorySizeCalculationUtils::formatSize(qint64 size) {
+QString DirectorySizeCalculationUtils::formatSize(qint64 size)
+{
     QStringList units = {"Bytes", "KB", "MB", "GB", "TB", "PB"};
     int i;
     double outputSize = size;
@@ -38,7 +41,8 @@ QString DirectorySizeCalculationUtils::formatSize(qint64 size) {
     return QString("%0 %1").arg(outputSize, 0, 'f', 2).arg(units[i]);
 }
 
-QString DirectorySizeCalculationUtils::getUnit(qint64 size) {
+QString DirectorySizeCalculationUtils::getUnit(qint64 size)
+{
     QStringList units = {"Bytes", "KB", "MB", "GB", "TB", "PB"};
     int i;
     double outputSize = size;
@@ -49,7 +53,8 @@ QString DirectorySizeCalculationUtils::getUnit(qint64 size) {
     return units[i];
 }
 
-QString DirectorySizeCalculationUtils::getFormattedSize(qint64 size) {
+QString DirectorySizeCalculationUtils::getFormattedSize(qint64 size)
+{
     QStringList units = {"Bytes", "KB", "MB", "GB", "TB", "PB"};
     int i;
     double outputSize = size;
