@@ -22,12 +22,12 @@
         <widget class="QLineEdit" name="lineEdit"/>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="favoritesPushButton">
          <property name="text">
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../resources/resources.qrc">
+          <iconset>
            <normaloff>:/icons/arrow.png</normaloff>:/icons/arrow.png</iconset>
          </property>
          <property name="default">
@@ -42,7 +42,7 @@
        <property name="widgetResizable">
         <bool>true</bool>
        </property>
-       <widget class="QWidget" name="scrollAreaWidgetContents">
+       <widget class="QWidget" name="favoritesContainer">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -63,8 +63,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../resources/resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

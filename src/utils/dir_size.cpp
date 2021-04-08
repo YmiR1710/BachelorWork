@@ -37,3 +37,25 @@ QString DirectorySizeCalculationUtils::formatSize(qint64 size) {
     }
     return QString("%0 %1").arg(outputSize, 0, 'f', 2).arg(units[i]);
 }
+
+QString DirectorySizeCalculationUtils::getUnit(qint64 size) {
+    QStringList units = {"Bytes", "KB", "MB", "GB", "TB", "PB"};
+    int i;
+    double outputSize = size;
+    for (i = 0; i < units.size() - 1; i++) {
+        if (outputSize < 1024) break;
+        outputSize = outputSize / 1024;
+    }
+    return units[i];
+}
+
+QString DirectorySizeCalculationUtils::getFormattedSize(qint64 size) {
+    QStringList units = {"Bytes", "KB", "MB", "GB", "TB", "PB"};
+    int i;
+    double outputSize = size;
+    for (i = 0; i < units.size() - 1; i++) {
+        if (outputSize < 1024) break;
+        outputSize = outputSize / 1024;
+    }
+    return QString("%0").arg(outputSize, 0, 'f', 2);
+}

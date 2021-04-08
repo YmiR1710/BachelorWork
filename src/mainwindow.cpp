@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     existingFavoritePaths = QStringList();
-    configure();
     model_1 = new QFileSystemModel(this);
     model_2 = new QFileSystemModel(this);
     model_1->setFilter(QDir::QDir::AllEntries | QDir::QDir::NoDot);
@@ -61,11 +60,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->listView_2->setSortingEnabled(true);
     ui->listView_1->horizontalHeader()->setSortIndicator(0, Qt::AscendingOrder);
     ui->listView_2->horizontalHeader()->setSortIndicator(0, Qt::AscendingOrder);
+    ui->listView_1->horizontalHeader()->setSortIndicator(0, Qt::AscendingOrder);
+    ui->listView_1->setShowGrid(false);
+    ui->listView_2->setShowGrid(false);
+    ui->listView_1->setFocusPolicy(Qt::NoFocus);
+    ui->listView_2->setFocusPolicy(Qt::NoFocus);
     ui->search_1->setVisible(false);
     ui->search_2->setVisible(false);
     SwapDrivesUtils::configure_ui(ui->comboBox_1);
     SwapDrivesUtils::configure_ui(ui->comboBox_2);
-    setup_cloud_drives();
+    configure();
     emit ui->statistics->update_charts(QFileInfo(mPath));
     connect(ui->comboBox_1, SIGNAL(textActivated(QString)), this, SLOT(change_root_path(QString)));
     connect(ui->comboBox_2, SIGNAL(textActivated(QString)), this, SLOT(change_root_path(QString)));
@@ -150,7 +154,7 @@ void MainWindow::delete_file() {
     QMessageBox::StandardButton reply;
     QString question = "Are you sure you want to delete " + QString::number(chosenFiles.size()) +
                        " files?";
-    reply = QMessageBox::question(this, "", question,
+    reply = QMessageBox::question(this, "Delete", question,
                                   QMessageBox::Yes | QMessageBox::No);
     this->setCursor(QCursor(Qt::WaitCursor));
     for (auto &c_file : chosenFiles) {
@@ -171,7 +175,7 @@ void MainWindow::rename_file() {
     name.append(info.completeSuffix());
     QString text;
     if (info.permission(QFile::WriteUser)) {
-        text = QInputDialog::getText(this, tr(""),
+        text = QInputDialog::getText(this, tr("Rename"),
                                      tr("New name:"), QLineEdit::Normal,
                                      name, &result);
     } else {
@@ -312,7 +316,7 @@ void MainWindow::paste_file() {
 
 void MainWindow::create_file() {
     bool result;
-    QString text = QInputDialog::getText(this, tr(""),
+    QString text = QInputDialog::getText(this, tr("Create"),
                                          tr("New file:"), QLineEdit::Normal,
                                          "", &result);
     if (result) {
@@ -327,7 +331,7 @@ void MainWindow::create_file() {
 
 void MainWindow::create_folder() {
     bool result;
-    QString text = QInputDialog::getText(this, tr(""),
+    QString text = QInputDialog::getText(this, tr("Create"),
                                          tr("New folder:"), QLineEdit::Normal,
                                          "", &result);
     if (result) {
@@ -519,32 +523,34 @@ void MainWindow::change_theme() {
     if (action == ui->actionDark) {
         ConfigParser::change_config(QString("theme"), QString("DARK"));
         currentTheme = Theme::DARK;
-        setStyleSheet("QMainWindow {background: 'black';} QTableView {background: 'black'; color:'white'}");
+        ui->statistics->updateChartsTheme(Theme::DARK);
+        QFile fileDark(":/ui/styles/dark.qss");
+        fileDark.open(QFile::ReadOnly);
+        setStyleSheet(fileDark.readAll());
     }
     else if (action == ui->actionLight) {
         ConfigParser::change_config(QString("theme"), QString("LIGHT"));
         currentTheme = Theme::LIGHT;
-        setStyleSheet("QMainWindow {background: 'white';} QTableView {background: 'white'; color:'black'}");
+        ui->statistics->updateChartsTheme(Theme::LIGHT);
+        QFile fileLight(":/ui/styles/light.qss");
+        fileLight.open(QFile::ReadOnly);
+        setStyleSheet(fileLight.readAll());
     }
 }
 
 void MainWindow::configure() {
     setWindowTitle("QExplorer");
     QList<QScreen *> rec = QGuiApplication::screens();
-    resize(rec.first()->availableGeometry().width() / 2, rec.first()->availableGeometry().height() / 2);
+    resize(rec.first()->availableGeometry().width() / 1.5, rec.first()->availableGeometry().height() / 1.5);
     ConfigParser::configure();
     if (currentTheme == Theme::DARK) {
-        setStyleSheet("QMainWindow {background: 'black';} QTableView {background: 'black'; color:'white'}");
+        QFile fileDark(":/ui/styles/dark.qss");
+        fileDark.open(QFile::ReadOnly);
+        setStyleSheet(fileDark.readAll());
     }
     else if (currentTheme == Theme::LIGHT) {
-        setStyleSheet("QMainWindow {background: 'white';} QTableView {background: 'white'; color:'black'}");
-    }
-}
-
-void MainWindow::setup_cloud_drives() {
-    QList<CloudDrive> drives = CloudDriveUtils::get_supported_drives();
-    for (auto drive : drives) {
-        CloudDriveWidget *driveWidget = new CloudDriveWidget(this, drive.getName(), drive.getImage(), DirectorySizeCalculationUtils::formatSize(drive.getSize()));
-        ui->verticalLayout_4->addWidget(driveWidget);
+        QFile fileLight(":/ui/styles/light.qss");
+        fileLight.open(QFile::ReadOnly);
+        setStyleSheet(fileLight.readAll());
     }
 }

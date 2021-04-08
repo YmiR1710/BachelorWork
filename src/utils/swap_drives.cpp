@@ -4,6 +4,7 @@ void SwapDrivesUtils::configure_ui(QComboBox *ui) {
     ui->setVisible(false);
 #if defined(_WIN32)
     ui->setVisible(true);
+    ui->setFocusPolicy(Qt::NoFocus);
     for (auto drive : get_drives_name()) {
         ui->addItem(drive);
     }

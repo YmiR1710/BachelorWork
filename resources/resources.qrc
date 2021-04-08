@@ -1,11 +1,27 @@
 <RCC>
     <qresource prefix="/">
         <file>../icons/icon.png</file>
-        <file>../icons/search_icon.png</file>
-        <file>../icons/star.png</file>
-        <file>../icons/cross.png</file>
-        <file>../icons/edit.png</file>
-        <file>../icons/tick.png</file>
-        <file>../icons/arrow.png</file>
+        <file>../ui/styles/dark.qss</file>
+        <file>../ui/styles/light.qss</file>
+        <file>../icons/black_arrow.png</file>
+        <file>../icons/black_search.png</file>
+        <file>../icons/white_arrow.png</file>
+        <file>../icons/white_search.png</file>
+        <file>../icons/black_star.png</file>
+        <file>../icons/white_star.png</file>
+        <file>../icons/black_edit.png</file>
+        <file>../icons/white_edit.png</file>
+        <file>../icons/black_cross.png</file>
+        <file>../icons/white_cross.png</file>
+        <file>../icons/black_ok.png</file>
+        <file>../icons/white_ok.png</file>
+        <file>../icons/black_doc.png</file>
+        <file>../icons/black_music.png</file>
+        <file>../icons/black_other.png</file>
+        <file>../icons/black_photo.png</file>
+        <file>../icons/white_doc.png</file>
+        <file>../icons/white_music.png</file>
+        <file>../icons/white_other.png</file>
+        <file>../icons/white_photo.png</file>
     </qresource>
 </RCC>

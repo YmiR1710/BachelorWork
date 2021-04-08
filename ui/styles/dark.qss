@@ -1,0 +1,276 @@
+QMainWindow {
+    background: #101012;
+}
+QTableView {
+    background: #2B2C2D;
+    color: #BABABF;
+    border-radius: 10px;
+}
+#listView_1{
+    margin-right: 4px;
+}
+#listView_2{
+    margin-left: 4px;
+}
+#favoritesContainer{
+    background: #2B2C2D;
+}
+QPushButton{
+    background: #2B2C2D;
+    color: #BABABF;
+    border: 3px solid #2B2C2D;
+    border-radius: 5px;
+}
+QPushButton:pressed {
+    background-color: #0066CC;
+    border: 3px solid #0066CC;
+}
+#search_button_1 {
+    image: url(:/icons/white_search.png);
+}
+#search_button_2 {
+    image: url(:/icons/white_search.png);
+}
+#favoritePathsButton_1 {
+    image: url(:/icons/white_star.png);
+}
+#favoritePathsButton_2 {
+    image: url(:/icons/white_star.png);
+}
+#favoritesPushButton {
+    image: url(:/icons/white_arrow.png);
+}
+#editButton {
+    image: url(:/icons/white_edit.png);
+}
+#deleteButton {
+    image: url(:/icons/white_cross.png);
+}
+#okButton {
+    image: url(:/icons/white_ok.png);
+}
+QLineEdit{
+    background: #2B2C2D;
+    color: #BABABF;
+    border: 3px solid #2B2C2D;
+    border-radius: 5px;
+}
+QComboBox{
+    background: #2B2C2D;
+    color: #BABABF;
+}
+QComboBox QAbstractItemView {
+    outline: 0px;
+    background: #2B2C2D;
+    border: 0;
+    selection-background-color: #0066CC;
+    color: #BABABF;
+}
+QComboBox QAbstractItemView::item {
+    min-height: 50px;
+}
+QScrollBar::add-page, QScrollBar::sub-page {
+    background: none;
+}
+QScrollBar {
+    border: 0px solid #999999;
+    background: #2B2C2D;
+    width: 13px;
+    margin: 0px 0px 0px 0px;
+}
+QScrollBar::handle {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+    stop: 0 #0066CC, stop: 0.5 #0066CC, stop:1 #0066CC);
+    min-height: 0px;
+    border: 0px solid #999999;
+    border-radius: 5px;
+    background-color: #0066CC;
+}
+QScrollBar::add-line {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+    stop: 0 #0066CC, stop: 0.5 #0066CC,  stop:1 #0066CC);
+    height: 0px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+    border-radius: 10px;
+}
+QScrollBar::sub-line {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+    stop: 0  #0066CC, stop: 0.5 #0066CC,  stop:1 #0066CC);
+    height: 0 px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+    border-radius: 10px;
+}
+QSplitter::handle:vertical {
+    width: 0px;
+}
+QTableView::item {
+
+}
+QTableView::item:selected {
+    background-color: #0066CC;
+    border: 0;
+}
+QHeaderView::section {
+    background-color: #2B2C2D;
+    color: #BABABF;
+}
+QHeaderView::section:checked {
+    border: none;
+
+}
+QMenuBar {
+    background-color: #101012;
+    spacing: 3px;
+}
+QMenuBar::item {
+    padding: 1px 10px;
+    background: transparent;
+    border-radius: 4px;
+    color: #BABABF;
+}
+QMenuBar::item:selected {
+    background: #0066CC;
+    color: #101012;
+}
+QMenuBar::item:pressed {
+    background: #0066CC;
+    color: #101012;
+}
+QMenu {
+    background-color: #101012;
+    border: 0px solid black;
+    margin: 2px;
+}
+QMenu::item {
+    background-color: #101012;
+    color: #BABABF;
+    padding: 4px 50px 4px 20px;
+    border-radius: 4px;
+}
+QMenu::item:selected {
+    background-color: #0066CC;
+    color: #101012;
+}
+PropertiesWindow {
+    background: #2B2C2D;
+    color: #BABABF;
+}
+QDialog{
+    background-color: #101012;
+}
+QTabWidget::pane{
+    margin: 0;
+    border: 2px solid #0066CC;
+    background: #2B2C2D;
+}
+QTabBar::tab {
+    background: #2B2C2D;
+    color: #BABABF;
+    padding: 3px 17px 3px 17px;
+}
+QTabBar::tab:selected {
+    background-color: #0066CC;
+    color: #101012;
+}
+QLabel {
+    background: #2B2C2D;
+    color: #BABABF;
+    margin: 0;
+    padding: 0;
+}
+#discName {
+    margin-left: 1px;
+    font-size: 30px;
+}
+#systemType {
+    margin-left: 1px;
+    font-size: 17px;
+}
+#isReadOnly {
+    margin-left: 1px;
+    font-size: 17px;
+}
+#isReady {
+    margin-left: 1px;
+    font-size: 17px;
+}
+#currentMemory {
+    color: #0066CC;
+    font-size: 17px;
+}
+#currentMetrics {
+    color: #878787;
+    font-size: 13px;
+}
+#totalMemory {
+    font-size: 17px;
+}
+#totalMetrics {
+    color: #878787;
+    font-size: 13px;
+}
+FavoritePathWidget {
+    border: 1px solid #101012;
+}
+FavoritePathWidget:hover {
+    background-color: #0066CC;
+}
+#favoritePathWidgetLabel{
+    background-color: transparent;
+}
+#driveLogo {
+    background: #000F1F;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 30px;
+}
+#driveName {
+    font-size: 24px;
+}
+#userName {
+    color: #5A5C5C;
+    font-size: 17px;
+}
+#driveSize {
+    font-size: 18px;
+}
+#cloudDriveDetailsButton {
+    background-color: #0066CC;
+    color: #FFFFFF;
+    font-size: 13px;
+    padding: 6px;
+}
+CloudDriveWidget {
+    background: #2B2C2D;
+    border-radius: 12px;
+}
+#photoLogo {
+    image: url(:/icons/white_photo.png);
+    background: #000F1F;
+    padding: 10px;
+    margin: 4px;
+    border-radius: 15px;
+}
+#docsLogo {
+    image: url(:/icons/white_doc.png);
+    background: #000F1F;
+    padding: 10px;
+    margin: 4px;
+    border-radius: 15px;
+}
+#musicLogo {
+    image: url(:/icons/white_music.png);
+    background: #000F1F;
+    padding: 10px;
+    margin: 4px;
+    border-radius: 15px;
+}
+#otherLogo {
+    image: url(:/icons/white_other.png);
+    background: #000F1F;
+    padding: 10px;
+    margin: 4px;
+    border-radius: 15px;
+}

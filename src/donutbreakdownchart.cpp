@@ -35,7 +35,7 @@ void DonutBreakdownChart::addBreakdownSeries(QPieSeries *breakdownSeries, QColor
         slice->setLabelFont(font);
     }
     slices[0]->setColor(Qt::gray);
-    slices[1]->setColor(Qt::blue);
+    slices[1]->setColor(QColor("#0066CC"));
     QChart::addSeries(breakdownSeries);
     recalculateAngles();
     updateLegendMarkers();

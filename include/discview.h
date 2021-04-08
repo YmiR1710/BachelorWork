@@ -14,7 +14,7 @@ class DiscView : public QWidget
     Q_OBJECT
 
 public:
-    explicit DiscView(QWidget *parent = nullptr, QString discName = "", QString systemType = "", QString memory = "");
+    explicit DiscView(QWidget *parent, QString discName, QString systemType, QString currentMemory, QString currentMetrics, QString totalMemory, QString totalMetrics, QString ready, QString readOnly);
     ~DiscView();
 
 private:

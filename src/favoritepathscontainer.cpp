@@ -8,7 +8,7 @@ FavoritePathsContainer::FavoritePathsContainer(QWidget *parent, QString defaultP
     ui->contentLayout->setAlignment(Qt::AlignTop);
     ui->lineEdit->setText(defaultPath);
     connect(ui->lineEdit, SIGNAL(returnPressed()), this, SLOT(add_favorite_path()));
-    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(add_favorite_path()));
+    connect(ui->favoritesPushButton, SIGNAL(clicked()), this, SLOT(add_favorite_path()));
     for (QString path : existingFavoritePaths) {
         FavoritePathWidget *newPath = new FavoritePathWidget(this, path);
         if (newPath->validate(path)) {

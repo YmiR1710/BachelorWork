@@ -8,9 +8,11 @@ StatisticsWidget::StatisticsWidget(QWidget *parent) :
     ui(new Ui::StatisticsWidget)
 {
     ui->setupUi(this);
+    ConfigParser::configure();
+    currentChartsTheme = currentTheme;
     connect(this, SIGNAL(update_charts(QFileInfo)), this, SLOT(paint_statistics(QFileInfo)));
     QList<QStorageInfo> infoList = StatisticsUtils::get_storage_info();
-    DonutBreakdownChart *donutBreakdown = new DonutBreakdownChart();
+    donutBreakdown = new DonutBreakdownChart();
     donutBreakdown->setAnimationOptions(QChart::AllAnimations);
     donutBreakdown->legend()->setAlignment(Qt::AlignRight);
     int colorCounter = 0;
@@ -23,6 +25,8 @@ StatisticsWidget::StatisticsWidget(QWidget *parent) :
         QPieSlice *free = series->slices().at(1);
         used->setLabelVisible(false);
         free->setLabelVisible(false);
+        used->setBorderWidth(0);
+        free->setBorderWidth(0);
         donutBreakdown->addBreakdownSeries(series, colorTheme[colorCounter]);
         donutBreakdown->legend()->hide();
         colorCounter++;
@@ -30,16 +34,36 @@ StatisticsWidget::StatisticsWidget(QWidget *parent) :
             colorCounter = 0;
         }
     }
+    donutBreakdown->setContentsMargins(-60, -60, -60, -60);
+    if (currentTheme == Theme::DARK) {
+        donutBreakdown->setPlotAreaBackgroundBrush(QBrush(QColor("#2B2C2D")));
+    }
+    else if (currentTheme == Theme::LIGHT) {
+        donutBreakdown->setPlotAreaBackgroundBrush(QBrush(QColor("#FFFFFF")));
+    }
+    donutBreakdown->setPlotAreaBackgroundVisible(true);
     ui->totalConsumption->setChart(donutBreakdown);
     ui->totalConsumption->setRenderHint(QPainter::Antialiasing);
-
     for (int i = 0; i < infoList.size(); i++) {
         QStorageInfo info = infoList[i];
-        DiscView *disc = new DiscView(this, "Name: " + infoList[i].rootPath().remove(info.rootPath().size() - 2, info.rootPath().size()),
+        QString ready = info.isReady() ? "yes" : "no";
+        QString readOnly = info.isReadOnly() ? "yes" : "no";
+        DiscView *disc = new DiscView(this, "Disc: " + infoList[i].rootPath().remove(info.rootPath().size() - 2, info.rootPath().size()),
                                       "File system type: " + infoList[i].fileSystemType(),
-                                      DirectorySizeCalculationUtils::formatSize(info.bytesAvailable()) + " free of " + DirectorySizeCalculationUtils::formatSize(info.bytesTotal()));
+                                      DirectorySizeCalculationUtils::getFormattedSize(info.bytesTotal() - info.bytesAvailable()) + " ",
+                                      DirectorySizeCalculationUtils::getUnit(info.bytesTotal() - info.bytesAvailable()),
+                                      DirectorySizeCalculationUtils::getFormattedSize(info.bytesTotal()) + " ",
+                                      DirectorySizeCalculationUtils::getUnit(info.bytesTotal()),
+                                      "Ready: " + ready,
+                                      "ReadOnly: " + readOnly);
         ui->discs->addTab(disc, infoList[i].rootPath().remove(info.rootPath().size() - 2, info.rootPath().size()));
     }
+    setup_cloud_drives();
+}
+
+StatisticsWidget::~StatisticsWidget()
+{
+    delete ui;
 }
 
 void StatisticsWidget::paint_statistics(QFileInfo info) {
@@ -50,16 +74,50 @@ void StatisticsWidget::paint_statistics(QFileInfo info) {
         series->append(it.key(), it.value());
         series->setLabelsVisible(true);
     }
-    QChart *chart = new QChart();
-    chart->addSeries(series);
-    chart->legend()->hide();
-    chart->setAnimationOptions(QChart::AllAnimations);
-    chart->setTheme(QChart::ChartThemeHighContrast);
-    ui->typesDistribution->setChart(chart);
+    typesChart = new QChart();
+    typesChart->addSeries(series);
+    typesChart->legend()->hide();
+    typesChart->setAnimationOptions(QChart::AllAnimations);
+    if (currentTheme == Theme::DARK) {
+        typesChart->setTheme(QChart::ChartThemeHighContrast);
+        for (QPieSlice *slice : series->slices()) {
+            slice->setLabelColor(QColor("#BABABF"));
+        }
+        typesChart->setPlotAreaBackgroundBrush(QBrush(QColor("#2B2C2D")));
+    }
+    else if (currentTheme == Theme::LIGHT) {
+        typesChart->setTheme(QChart::ChartThemeHighContrast);
+        for (QPieSlice *slice : series->slices()) {
+            slice->setLabelColor(QColor("#101012"));
+        }
+        typesChart->setPlotAreaBackgroundBrush(QBrush(QColor("#FFFFFF")));
+    }
+    typesChart->setContentsMargins(-40, -40, -40, -40);
+    typesChart->setPlotAreaBackgroundVisible(true);
+    ui->typesDistribution->setChart(typesChart);
     ui->typesDistribution->setRenderHint(QPainter::Antialiasing);
 }
 
-StatisticsWidget::~StatisticsWidget()
-{
-    delete ui;
+void StatisticsWidget::setup_cloud_drives() {
+    QList<CloudDrive> drives = CloudDriveUtils::get_supported_drives();
+    for (auto drive : drives) {
+        CloudDriveWidget *driveWidget = new CloudDriveWidget(this->parentWidget()->parentWidget()->parentWidget()->parentWidget(), drive.getName(), drive.getImage(), DirectorySizeCalculationUtils::formatSize(drive.getSize()));
+        ui->verticalLayout->insertWidget(0, driveWidget);
+    }
+}
+
+void StatisticsWidget::updateChartsTheme(Theme theme) {
+    if (currentChartsTheme != theme) {
+        if (theme == Theme::DARK) {
+            typesChart->setTheme(QChart::ChartThemeHighContrast);
+            typesChart->setPlotAreaBackgroundBrush(QBrush(QColor("#2B2C2D")));
+            donutBreakdown->setPlotAreaBackgroundBrush(QBrush(QColor("#2B2C2D")));
+        }
+        else if (theme == Theme::LIGHT) {
+            typesChart->setTheme(QChart::ChartThemeHighContrast);
+            typesChart->setPlotAreaBackgroundBrush(QBrush(QColor("#FFFFFF")));
+            donutBreakdown->setPlotAreaBackgroundBrush(QBrush(QColor("#FFFFFF")));
+        }
+        currentChartsTheme = theme;
+    }
 }

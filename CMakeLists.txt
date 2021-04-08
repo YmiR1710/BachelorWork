@@ -79,6 +79,8 @@ set(PROJECT_SOURCES
         ui/discview.ui
         ui/favoritepathscontainer.ui
         ui/favoritepathwidget.ui
+        ui/styles/dark.qss
+        ui/styles/light.qss
         resources/resources.qrc
         config/.config
 )

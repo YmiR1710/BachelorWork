@@ -11,6 +11,8 @@ class DirectorySizeCalculationUtils {
 public:
     static void dirSizeWrap(QString dirPath, Properties *properties, PropertiesWindow *widget);
     static QString formatSize(qint64 size);
+    static QString getUnit(qint64 size);
+    static QString getFormattedSize(qint64 size);
 
 private:
     static void dirSize(QString dirPath, Properties *properties, PropertiesWindow *widget);

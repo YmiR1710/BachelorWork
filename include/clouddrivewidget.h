@@ -3,6 +3,8 @@
 
 #include "../ui/ui_clouddrivewidget.h"
 #include "./include/cloud_drive_entity.h"
+#include "./include/utils/statistics.h"
+#include "./include/utils/dir_size.h"
 #include <QWidget>
 #include <QDir>
 #include <QStyleOption>
@@ -26,6 +28,10 @@ protected:
 
 private:
     Ui::CloudDriveWidget *ui;
+    bool defaultMode;
+
+private slots:
+    void open_close_details();
 
 signals:
     void clicked(QString path);
