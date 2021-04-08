@@ -110,11 +110,17 @@ void StatisticsWidget::updateChartsTheme(Theme theme) {
     if (currentChartsTheme != theme) {
         if (theme == Theme::DARK) {
             typesChart->setTheme(QChart::ChartThemeHighContrast);
+            for (QAbstractSeries *series : typesChart->series())
+                for (QPieSlice *slice : ((QPieSeries *)series)->slices())
+                    slice->setLabelColor(QColor("#BABABF"));
             typesChart->setPlotAreaBackgroundBrush(QBrush(QColor("#2B2C2D")));
             donutBreakdown->setPlotAreaBackgroundBrush(QBrush(QColor("#2B2C2D")));
         }
         else if (theme == Theme::LIGHT) {
             typesChart->setTheme(QChart::ChartThemeHighContrast);
+            for (QAbstractSeries *series : typesChart->series())
+                for (QPieSlice *slice : ((QPieSeries *)series)->slices())
+                    slice->setLabelColor(QColor("#101012"));
             typesChart->setPlotAreaBackgroundBrush(QBrush(QColor("#FFFFFF")));
             donutBreakdown->setPlotAreaBackgroundBrush(QBrush(QColor("#FFFFFF")));
         }

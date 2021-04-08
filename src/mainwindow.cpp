@@ -422,6 +422,7 @@ void MainWindow::line_edit_enter() {
         idx = model_2->index(path);
     }
     if (dir.exists()) {
+        emit ui->statistics->update_charts(QFileInfo(path));
         if (line == ui->lineEdit_1) {
             ui->listView_1->setRootIndex(idx);
         }
