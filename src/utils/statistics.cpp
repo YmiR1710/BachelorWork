@@ -10,7 +10,8 @@ const QStringList StatisticsUtils::system = {"bak", "cab", "cfg", "cpl", "cur", 
 const QStringList StatisticsUtils::video = {"3g2", "3gp", "avi", "flv", "h264", "m4v", "mkv", "mov", "mp4", "mpg", "mpeg", "rm", "swf", "vob", "wmv"};
 const QStringList StatisticsUtils::text = {"doc", "docx", "odt", "pdf", "rtf", "tex", "txt", "wpd"};
 
-QString StatisticsUtils::extension_type_map(QFileInfo file) {
+QString StatisticsUtils::extension_type_map(QFileInfo file)
+{
     if ( file.isDir()) {
         return "Folder";
     }
@@ -37,7 +38,8 @@ QString StatisticsUtils::extension_type_map(QFileInfo file) {
         return "Other";
 }
 
-QMap<QString, int> StatisticsUtils::get_types_distribution_by_count(QFileInfo directory) {
+QMap<QString, int> StatisticsUtils::get_types_distribution_by_count(QFileInfo directory)
+{
     QDir dir(directory.absoluteFilePath());
     QMap<QString, int> typesMap;
     QFileInfoList entries = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries);
@@ -52,7 +54,8 @@ QMap<QString, int> StatisticsUtils::get_types_distribution_by_count(QFileInfo di
     return typesMap;
 }
 
-QMap<QString, qint64> StatisticsUtils::get_types_distribution_by_size(QFileInfo directory) {
+QMap<QString, qint64> StatisticsUtils::get_types_distribution_by_size(QFileInfo directory)
+{
     QDir dir(directory.absoluteFilePath());
     QMap<QString, qint64> typesMap;
     QFileInfoList entries = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries);
@@ -69,6 +72,7 @@ QMap<QString, qint64> StatisticsUtils::get_types_distribution_by_size(QFileInfo 
     return typesMap;
 }
 
-QList<QStorageInfo> StatisticsUtils::get_storage_info() {
+QList<QStorageInfo> StatisticsUtils::get_storage_info()
+{
     return QStorageInfo::root().mountedVolumes();
 }

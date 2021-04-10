@@ -2,7 +2,8 @@
 
 const QStringList CloudDriveUtils::supported_drives = {"/OneDrive"};
 
-QList<CloudDrive> CloudDriveUtils::get_supported_drives() {
+QList<CloudDrive> CloudDriveUtils::get_supported_drives()
+{
     QList<CloudDrive> drives;
     for (auto drive : supported_drives) {
         QString path = QDir::homePath().append(drive);
@@ -13,7 +14,8 @@ QList<CloudDrive> CloudDriveUtils::get_supported_drives() {
     return drives;
 }
 
-CloudDrive CloudDriveUtils::get_drive(QString path) {
+CloudDrive CloudDriveUtils::get_drive(QString path)
+{
     QFileInfo driveInfo(path);
     CloudDrive drive;
     QFileIconProvider iconProvider;
@@ -24,7 +26,8 @@ CloudDrive CloudDriveUtils::get_drive(QString path) {
     return drive;
 }
 
-qint64 CloudDriveUtils::get_drive_size(QString path) {
+qint64 CloudDriveUtils::get_drive_size(QString path)
+{
     qint64 size = 0;
     QDir dir(path);
     QDir::Filters fileFilters = QDir::Files | QDir::System | QDir::Hidden;

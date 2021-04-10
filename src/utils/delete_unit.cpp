@@ -1,18 +1,18 @@
 #include <./include/utils/delete_unit.h>
 
-void DeletionUtils::delete_unit(QString absolutePath, QMessageBox::StandardButton reply, QFileInfo fileInfo) {
+void DeletionUtils::delete_unit(QString absolutePath, QMessageBox::StandardButton reply, QFileInfo fileInfo)
+{
     if (fileInfo.isFile()) {
         delete_file(absolutePath, reply, fileInfo);
-    }
-    else if (fileInfo.isSymLink()) {
+    } else if (fileInfo.isSymLink()) {
         delete_file(absolutePath, reply, fileInfo);
-    }
-    else {
+    } else {
         delete_folder(absolutePath, reply, fileInfo);
     }
 }
 
-void DeletionUtils::delete_file(QString absolutePath, QMessageBox::StandardButton reply, QFileInfo fileInfo) {
+void DeletionUtils::delete_file(QString absolutePath, QMessageBox::StandardButton reply, QFileInfo fileInfo)
+{
     QFile file(absolutePath);
     if (reply == QMessageBox::Yes) {
         QFileInfo f(file);
@@ -28,7 +28,8 @@ void DeletionUtils::delete_file(QString absolutePath, QMessageBox::StandardButto
     }
 }
 
-void DeletionUtils::delete_folder(QString absolutePath, QMessageBox::StandardButton reply, QFileInfo fileInfo) {
+void DeletionUtils::delete_folder(QString absolutePath, QMessageBox::StandardButton reply, QFileInfo fileInfo)
+{
     QDir dir(absolutePath);
     if (reply == QMessageBox::Yes) {
         QFileInfo f(dir.absolutePath());

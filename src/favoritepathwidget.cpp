@@ -21,23 +21,27 @@ FavoritePathWidget::~FavoritePathWidget()
     delete ui;
 }
 
-void FavoritePathWidget::delete_widget() {
+void FavoritePathWidget::delete_widget()
+{
     this->deleteLater();
     existingFavoritePaths.removeOne(ui->favoritePathWidgetLabel->text());
 }
 
-void FavoritePathWidget::mousePressEvent(QMouseEvent *event) {
+void FavoritePathWidget::mousePressEvent(QMouseEvent *event)
+{
     emit clicked(ui->favoritePathWidgetLabel->text());
 }
 
-void FavoritePathWidget::paintEvent(QPaintEvent *) {
+void FavoritePathWidget::paintEvent(QPaintEvent *)
+{
     QStyleOption opt;
     opt.init(this);
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void FavoritePathWidget::edit_path() {
+void FavoritePathWidget::edit_path()
+{
     ui->lineEdit->setText(ui->favoritePathWidgetLabel->text());
     ui->lineEdit->selectAll();
     ui->favoritePathWidgetLabel->setVisible(false);
@@ -46,7 +50,8 @@ void FavoritePathWidget::edit_path() {
     ui->lineEdit->setFocus();
 }
 
-void FavoritePathWidget::save_path() {
+void FavoritePathWidget::save_path()
+{
     if (validate(ui->lineEdit->text()) && !existingFavoritePaths.contains(ui->lineEdit->text())) {
         existingFavoritePaths.append(ui->lineEdit->text());
         existingFavoritePaths.removeOne(ui->favoritePathWidgetLabel->text());
@@ -55,8 +60,7 @@ void FavoritePathWidget::save_path() {
         ui->lineEdit->clear();
         ui->okButton->setVisible(false);
         ui->favoritePathWidgetLabel->setVisible(true);
-    }
-    else if (ui->lineEdit->text() == ui->favoritePathWidgetLabel->text()) {
+    } else if (ui->lineEdit->text() == ui->favoritePathWidgetLabel->text()) {
         ui->lineEdit->setVisible(false);
         ui->lineEdit->clear();
         ui->okButton->setVisible(false);
@@ -64,7 +68,8 @@ void FavoritePathWidget::save_path() {
     }
 }
 
-bool FavoritePathWidget::validate(QString path) {
+bool FavoritePathWidget::validate(QString path)
+{
     if (QDir(path).exists() && !path.isEmpty()) {
         return true;
     }

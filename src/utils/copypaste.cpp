@@ -1,6 +1,7 @@
 #include <./include/utils/copypaste.h>
 
-void CopyPasteUtils::paste_unit(QFileInfo copy_info, QString path, bool isFolder) {
+void CopyPasteUtils::paste_unit(QFileInfo copy_info, QString path, bool isFolder)
+{
     if (isFolder) {
         paste_folder(copy_info, path);
     } else {
@@ -8,7 +9,8 @@ void CopyPasteUtils::paste_unit(QFileInfo copy_info, QString path, bool isFolder
     }
 }
 
-void CopyPasteUtils::paste_file(QFileInfo copy_info, QString path) {
+void CopyPasteUtils::paste_file(QFileInfo copy_info, QString path)
+{
     QFile file_to_copy(copy_info.absoluteFilePath());
     if (file_to_copy.exists()) {
         QString new_path = path;
@@ -37,7 +39,8 @@ void CopyPasteUtils::paste_file(QFileInfo copy_info, QString path) {
     }
 }
 
-void CopyPasteUtils::paste_folder(QFileInfo copy_info, QString path) {
+void CopyPasteUtils::paste_folder(QFileInfo copy_info, QString path)
+{
     QDir dir_to_copy(copy_info.absoluteFilePath());
     if (dir_to_copy.exists()) {
         QString new_path = path;

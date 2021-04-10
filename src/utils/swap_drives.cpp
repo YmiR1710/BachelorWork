@@ -1,6 +1,7 @@
 #include "./include/utils/swap_drives.h"
 
-void SwapDrivesUtils::configure_ui(QComboBox *ui) {
+void SwapDrivesUtils::configure_ui(QComboBox *ui)
+{
     ui->setVisible(false);
 #if defined(_WIN32)
     ui->setVisible(true);
@@ -11,7 +12,8 @@ void SwapDrivesUtils::configure_ui(QComboBox *ui) {
 #endif
 }
 
-QStringList SwapDrivesUtils::get_drives_name() {
+QStringList SwapDrivesUtils::get_drives_name()
+{
     QStringList list;
     for (auto info : QDir::drives()) {
         list.append(info.absoluteFilePath());
