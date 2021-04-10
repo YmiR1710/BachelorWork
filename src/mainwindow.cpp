@@ -60,11 +60,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->listView_2->setSortingEnabled(true);
     ui->listView_1->horizontalHeader()->setSortIndicator(0, Qt::AscendingOrder);
     ui->listView_2->horizontalHeader()->setSortIndicator(0, Qt::AscendingOrder);
-    ui->listView_1->horizontalHeader()->setSortIndicator(0, Qt::AscendingOrder);
     ui->listView_1->setShowGrid(false);
     ui->listView_2->setShowGrid(false);
     ui->listView_1->setFocusPolicy(Qt::NoFocus);
     ui->listView_2->setFocusPolicy(Qt::NoFocus);
+    ui->listView_1->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->listView_2->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->listView_1->verticalHeader()->hide();
+    ui->listView_2->verticalHeader()->hide();
     ui->search_1->setVisible(false);
     ui->search_2->setVisible(false);
     SwapDrivesUtils::configure_ui(ui->comboBox_1);
@@ -89,6 +92,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionLight, SIGNAL(triggered()), this, SLOT(change_theme()));
     connect(ui->favoritePathsButton_1, SIGNAL(clicked()), this, SLOT(show_favorite_paths()));
     connect(ui->favoritePathsButton_2, SIGNAL(clicked()), this, SLOT(show_favorite_paths()));
+    connect(ui->actionSearch, SIGNAL(triggered()), this, SLOT(show_search_window()));
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_C), this, SLOT(copy_file()));
     new QShortcut(QKeySequence(Qt::Key_Escape), this, SLOT(close_search()));
 //    new QShortcut(QKeySequence(Qt::Key_Delete), this, SLOT(delete_file())); TODO
@@ -544,6 +548,16 @@ void MainWindow::change_theme()
         fileLight.open(QFile::ReadOnly);
         setStyleSheet(fileLight.readAll());
     }
+}
+
+void MainWindow::show_search_window() {
+    QMainWindow *window = new QMainWindow(this);
+    SearchWindow *search = new SearchWindow();
+    window->setWindowTitle("Search");
+    window->setCentralWidget(search);
+    window->setFixedHeight(this->height() / 2);
+    window->setFixedWidth(this->width() / 4);
+    window->show();
 }
 
 void MainWindow::configure()

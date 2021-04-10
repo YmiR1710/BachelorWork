@@ -277,3 +277,6 @@ CloudDriveWidget {
     margin: 2px 4px;
     border-radius: 15px;
 }
+SearchWindow QLabel{
+    background: transparent;
+}

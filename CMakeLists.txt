@@ -42,6 +42,7 @@ set(PROJECT_SOURCES
         src/favoritepathscontainer.cpp
         src/favoritepathwidget.cpp
         src/favoritesmainwindow.cpp
+        src/searchwindow.cpp
         include/mainwindow.h
         include/global.h
         include/utils/copy_path.h
@@ -67,6 +68,7 @@ set(PROJECT_SOURCES
         include/utils/statistics.h
         include/clouddrivewidget.h
         include/cloud_drive_entity.h
+        include/searchwindow.h
         ui/mainwindow.ui
         ui/statisticswidget.ui
         ui/discview.ui

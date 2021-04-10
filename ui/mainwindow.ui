@@ -184,6 +184,7 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="actionSearch"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
@@ -216,6 +217,11 @@
   <action name="actionDark">
    <property name="text">
     <string>Dark</string>
+   </property>
+  </action>
+  <action name="actionSearch">
+   <property name="text">
+    <string>Search</string>
    </property>
   </action>
  </widget>

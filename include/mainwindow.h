@@ -18,6 +18,7 @@
 #include "./include/propertieswindow.h"
 #include "./include/favoritepathscontainer.h"
 #include "./include/favoritesmainwindow.h"
+#include "./include/searchwindow.h"
 #include <QMainWindow>
 #include <QDialog>
 #include <QFileSystemModel>
@@ -72,6 +73,7 @@ private slots:
     void open_cloud_drive(QString path);
     void show_favorite_paths();
     void open_favorite_path(QString path);
+    void show_search_window();
 
 
 private:
