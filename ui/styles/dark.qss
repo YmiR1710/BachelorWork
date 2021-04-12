@@ -111,6 +111,7 @@ QTableView::item {
 QTableView::item:selected {
     background-color: #0066CC;
     border: 0;
+    color: #BABABF;
 }
 QHeaderView::section {
     background-color: #2B2C2D;
@@ -132,11 +133,9 @@ QMenuBar::item {
 }
 QMenuBar::item:selected {
     background: #0066CC;
-    color: #101012;
 }
 QMenuBar::item:pressed {
     background: #0066CC;
-    color: #101012;
 }
 QMenu {
     background-color: #101012;
@@ -151,7 +150,6 @@ QMenu::item {
 }
 QMenu::item:selected {
     background-color: #0066CC;
-    color: #101012;
 }
 PropertiesWindow {
     background: #2B2C2D;
@@ -172,7 +170,6 @@ QTabBar::tab {
 }
 QTabBar::tab:selected {
     background-color: #0066CC;
-    color: #101012;
 }
 QLabel {
     background: #2B2C2D;
