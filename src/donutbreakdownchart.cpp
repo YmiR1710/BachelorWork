@@ -41,7 +41,7 @@ void DonutBreakdownChart::addBreakdownSeries(QPieSeries *breakdownSeries, QColor
     updateLegendMarkers();
 }
 
-void DonutBreakdownChart::recalculateAngles()
+void DonutBreakdownChart::recalculateAngles() const
 {
     qreal angle = 0;
     const auto slices = m_mainSeries->slices();
@@ -53,7 +53,7 @@ void DonutBreakdownChart::recalculateAngles()
     }
 }
 
-void DonutBreakdownChart::updateLegendMarkers()
+void DonutBreakdownChart::updateLegendMarkers() const
 {
     const auto allseries = series();
     for (QAbstractSeries *series : allseries) {

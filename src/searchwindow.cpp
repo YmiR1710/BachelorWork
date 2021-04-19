@@ -76,12 +76,12 @@ void SearchWindow::find()
     worker.detach();
 }
 
-void SearchWindow::animateFindClick()
+void SearchWindow::animateFindClick() const
 {
     findButton->animateClick();
 }
 
-void SearchWindow::findFiles(QDirIterator &iterator, const QString &text)
+void SearchWindow::findFiles(QDirIterator &iterator, const QString &text) const
 {
     QStringList files;
     while (iterator.hasNext()) {
@@ -123,7 +123,7 @@ void SearchWindow::findFiles(QDirIterator &iterator, const QString &text)
     connect(findButton, &QAbstractButton::clicked, this, &SearchWindow::find);
 }
 
-void SearchWindow::showFile(const QString &filePath)
+void SearchWindow::showFile(const QString &filePath) const
 {
     const QString toolTip = QDir::toNativeSeparators(filePath);
     const QString relativePath = QDir::toNativeSeparators(currentDir.relativeFilePath(filePath));
@@ -146,7 +146,7 @@ void SearchWindow::showFile(const QString &filePath)
     filesFoundLabel->setWordWrap(true);
 }
 
-QComboBox *SearchWindow::createComboBox(const QString &text)
+QComboBox *SearchWindow::createComboBox(const QString &text) const
 {
     QComboBox *comboBox = new QComboBox;
     comboBox->setEditable(true);
@@ -172,7 +172,7 @@ void SearchWindow::createFilesTable()
             this, &SearchWindow::openFileOfItem);
 }
 
-void SearchWindow::openFileOfItem(int row, int /* column */)
+void SearchWindow::openFileOfItem(int row, int /* column */) const
 {
     const QTableWidgetItem *item = filesTable->item(row, 0);
     openFile(fileNameOfItem(item));

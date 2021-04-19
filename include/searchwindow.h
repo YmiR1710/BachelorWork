@@ -22,13 +22,13 @@ public:
 
 private slots:
     void find();
-    void animateFindClick();
-    void openFileOfItem(int row, int column);
+    void animateFindClick() const;
+    void openFileOfItem(int row, int column) const;
 
 private:
-    void findFiles(QDirIterator &iterator, const QString &text);
-    void showFile(const QString &filePath);
-    QComboBox *createComboBox(const QString &text = QString());
+    void findFiles(QDirIterator &iterator, const QString &text) const;
+    void showFile(const QString &filePath) const;
+    QComboBox *createComboBox(const QString &text = QString()) const;
     void createFilesTable();
 
     QComboBox *fileComboBox;

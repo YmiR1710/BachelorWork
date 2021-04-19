@@ -86,28 +86,13 @@ QString Properties::toString()
     QStringList properties_list = {"Name: ", "Type: ", "Size: ", "Parent folder: ",
                                    "Group: ", "Owner: ", "Created: ", "Last modified: "
                                   };
-    properties_text.append(properties_list[0]);
-    properties_text.append(name);
-    properties_text.append("\n\n");
-    properties_text.append(properties_list[1]);
-    properties_text.append(type);
-    properties_text.append("\n\n");
-    properties_text.append(properties_list[2]);
-    properties_text.append(size);
-    properties_text.append("\n\n");
-    properties_text.append(properties_list[3]);
-    properties_text.append(parent_folder);
-    properties_text.append("\n\n");
-    properties_text.append(properties_list[4]);
-    properties_text.append(group);
-    properties_text.append("\n\n");
-    properties_text.append(properties_list[5]);
-    properties_text.append(owner);
-    properties_text.append("\n\n");
-    properties_text.append(properties_list[6]);
-    properties_text.append(last_modified);
-    properties_text.append("\n\n");
-    properties_text.append(properties_list[7]);
-    properties_text.append(created);
+    QStringList values_list = {name, type, size, parent_folder,
+                               group, owner, created, last_modified
+                              };
+    for (int i = 0; i < properties_list.size(); i++) {
+        properties_text.append(properties_list[i]);
+        properties_text.append(values_list[i]);
+        properties_text.append("\n\n");
+    }
     return properties_text;
 }

@@ -14,8 +14,8 @@ public:
     void addBreakdownSeries(QPieSeries *series, QColor color);
 
 private:
-    void recalculateAngles();
-    void updateLegendMarkers();
+    void recalculateAngles() const;
+    void updateLegendMarkers() const;
     QPieSeries *m_mainSeries;
 };
 

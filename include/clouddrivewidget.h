@@ -29,6 +29,7 @@ protected:
 private:
     Ui::CloudDriveWidget *ui;
     bool defaultMode;
+    void show_hide_details_labels(bool isVisible) const;
 
 private slots:
     void open_close_details();

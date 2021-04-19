@@ -38,7 +38,7 @@ signals:
     void update_charts(QFileInfo info);
 
 private:
-    void setup_cloud_drives();
+    void setup_cloud_drives() const;
     Ui::StatisticsWidget *ui;
     Theme currentChartsTheme;
     DonutBreakdownChart *donutBreakdown;

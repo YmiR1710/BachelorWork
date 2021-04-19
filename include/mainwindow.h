@@ -79,5 +79,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     void configure();
+    void list_view_init(QTableView *tableView, QFileSystemModel *model);
 };
 #endif

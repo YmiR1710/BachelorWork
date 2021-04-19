@@ -38,36 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
     model_2->setRootPath(mPath);
     ui->lineEdit_1->setText(mPath);
     ui->lineEdit_2->setText(mPath);
-    ui->listView_1->setModel(model_1);
-    ui->listView_2->setModel(model_2);
-    QModelIndex idx = model_1->index(model_1->rootPath());
-    QModelIndex idx_2 = model_2->index(model_2->rootPath());
-    ui->listView_1->setRootIndex(idx);
-    ui->listView_2->setRootIndex(idx_2);
-    ui->listView_1->verticalHeader()->setVisible(false);
-    ui->listView_2->verticalHeader()->setVisible(false);
-    ui->listView_1->setContextMenuPolicy(Qt::CustomContextMenu);
-    ui->listView_2->setContextMenuPolicy(Qt::CustomContextMenu);
-    ui->listView_1->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    ui->listView_2->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    ui->listView_1->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->listView_1->horizontalHeader()->setStretchLastSection(true);
-    ui->listView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->listView_2->horizontalHeader()->setStretchLastSection(true);
-    ui->listView_1->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->listView_2->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->listView_1->setSortingEnabled(true);
-    ui->listView_2->setSortingEnabled(true);
-    ui->listView_1->horizontalHeader()->setSortIndicator(0, Qt::AscendingOrder);
-    ui->listView_2->horizontalHeader()->setSortIndicator(0, Qt::AscendingOrder);
-    ui->listView_1->setShowGrid(false);
-    ui->listView_2->setShowGrid(false);
-    ui->listView_1->setFocusPolicy(Qt::NoFocus);
-    ui->listView_2->setFocusPolicy(Qt::NoFocus);
-    ui->listView_1->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-    ui->listView_2->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-    ui->listView_1->verticalHeader()->hide();
-    ui->listView_2->verticalHeader()->hide();
+    list_view_init(ui->listView_1, model_1);
+    list_view_init(ui->listView_2, model_2);
     ui->search_1->setVisible(false);
     ui->search_2->setVisible(false);
     SwapDrivesUtils::configure_ui(ui->comboBox_1);
@@ -76,12 +48,6 @@ MainWindow::MainWindow(QWidget *parent)
     emit ui->statistics->update_charts(QFileInfo(mPath));
     connect(ui->comboBox_1, SIGNAL(textActivated(QString)), this, SLOT(change_root_path(QString)));
     connect(ui->comboBox_2, SIGNAL(textActivated(QString)), this, SLOT(change_root_path(QString)));
-    connect(ui->listView_1, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_listView_doubleClicked(QModelIndex)));
-    connect(ui->listView_2, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_listView_doubleClicked(QModelIndex)));
-    connect(ui->listView_1, SIGNAL(clicked(QModelIndex)), this, SLOT(click(QModelIndex)));
-    connect(ui->listView_2, SIGNAL(clicked(QModelIndex)), this, SLOT(click(QModelIndex)));
-    connect(ui->listView_2, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(custom_menu_requested(QPoint)));
-    connect(ui->listView_1, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(custom_menu_requested(QPoint)));
     connect(ui->lineEdit_1, SIGNAL(returnPressed()), SLOT(line_edit_enter()));
     connect(ui->lineEdit_2, SIGNAL(returnPressed()), SLOT(line_edit_enter()));
     connect(ui->search_button_1, SIGNAL (released()), this, SLOT (show_hide_search_1()));
@@ -575,4 +541,26 @@ void MainWindow::configure()
         fileLight.open(QFile::ReadOnly);
         setStyleSheet(fileLight.readAll());
     }
+}
+
+void MainWindow::list_view_init(QTableView *tableView, QFileSystemModel *model)
+{
+    tableView->setModel(model);
+    QModelIndex idx = model->index(model->rootPath());
+    tableView->setRootIndex(idx);
+    tableView->verticalHeader()->setVisible(false);
+    tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+    tableView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tableView->horizontalHeader()->setStretchLastSection(true);
+    tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tableView->setSortingEnabled(true);
+    tableView->horizontalHeader()->setSortIndicator(0, Qt::AscendingOrder);
+    tableView->setShowGrid(false);
+    tableView->setFocusPolicy(Qt::NoFocus);
+    tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    tableView->verticalHeader()->hide();
+    connect(tableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_listView_doubleClicked(QModelIndex)));
+    connect(tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(click(QModelIndex)));
+    connect(tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(custom_menu_requested(QPoint)));
 }

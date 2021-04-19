@@ -40,7 +40,7 @@ void FavoritePathWidget::paintEvent(QPaintEvent *)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void FavoritePathWidget::edit_path()
+void FavoritePathWidget::edit_path() const
 {
     ui->lineEdit->setText(ui->favoritePathWidgetLabel->text());
     ui->lineEdit->selectAll();
@@ -50,7 +50,7 @@ void FavoritePathWidget::edit_path()
     ui->lineEdit->setFocus();
 }
 
-void FavoritePathWidget::save_path()
+void FavoritePathWidget::save_path() const
 {
     if (validate(ui->lineEdit->text()) && !existingFavoritePaths.contains(ui->lineEdit->text())) {
         existingFavoritePaths.append(ui->lineEdit->text());
@@ -68,7 +68,7 @@ void FavoritePathWidget::save_path()
     }
 }
 
-bool FavoritePathWidget::validate(QString path)
+bool FavoritePathWidget::validate(QString path) const
 {
     if (QDir(path).exists() && !path.isEmpty()) {
         return true;

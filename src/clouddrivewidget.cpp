@@ -6,14 +6,7 @@ CloudDriveWidget::CloudDriveWidget(QWidget *parent, QString name, QPixmap image,
 {
     ui->setupUi(this);
     defaultMode = true;
-    ui->docsLogo->setVisible(false);
-    ui->docsInfo->setVisible(false);
-    ui->photoLogo->setVisible(false);
-    ui->photoInfo->setVisible(false);
-    ui->musicLogo->setVisible(false);
-    ui->musicInfo->setVisible(false);
-    ui->otherLogo->setVisible(false);
-    ui->otherInfo->setVisible(false);
+    show_hide_details_labels(false);
     ui->driveName->setText(name);
     ui->userName->setText(QDir::home().dirName());
     ui->driveSize->setText(size);
@@ -47,14 +40,7 @@ void CloudDriveWidget::open_close_details()
         ui->userName->setVisible(false);
         ui->driveSize->setVisible(false);
         ui->driveLogo->setVisible(false);
-        ui->docsLogo->setVisible(true);
-        ui->docsInfo->setVisible(true);
-        ui->photoLogo->setVisible(true);
-        ui->photoInfo->setVisible(true);
-        ui->musicLogo->setVisible(true);
-        ui->musicInfo->setVisible(true);
-        ui->otherLogo->setVisible(true);
-        ui->otherInfo->setVisible(true);
+        show_hide_details_labels(true);
         QMap<QString, qint64> distribution = StatisticsUtils::get_types_distribution_by_size(QFileInfo(QDir::homePath() + "/" + ui->driveName->text()));
         ui->docsInfo->setText("Documents\n" + DirectorySizeCalculationUtils::formatSize(distribution.value("Text")));
         ui->photoInfo->setText("Photo\n" + DirectorySizeCalculationUtils::formatSize(distribution.value("Image")));
@@ -68,15 +54,20 @@ void CloudDriveWidget::open_close_details()
         ui->userName->setVisible(true);
         ui->driveSize->setVisible(true);
         ui->driveLogo->setVisible(true);
-        ui->docsLogo->setVisible(false);
-        ui->docsInfo->setVisible(false);
-        ui->photoLogo->setVisible(false);
-        ui->photoInfo->setVisible(false);
-        ui->musicLogo->setVisible(false);
-        ui->musicInfo->setVisible(false);
-        ui->otherLogo->setVisible(false);
-        ui->otherInfo->setVisible(false);
+        show_hide_details_labels(false);
         ui->cloudDriveDetailsButton->setText("Details");
         defaultMode = true;
     }
+}
+
+void CloudDriveWidget::show_hide_details_labels(bool isVisible) const
+{
+    ui->docsLogo->setVisible(isVisible);
+    ui->docsInfo->setVisible(isVisible);
+    ui->photoLogo->setVisible(isVisible);
+    ui->photoInfo->setVisible(isVisible);
+    ui->musicLogo->setVisible(isVisible);
+    ui->musicInfo->setVisible(isVisible);
+    ui->otherLogo->setVisible(isVisible);
+    ui->otherInfo->setVisible(isVisible);
 }

@@ -97,7 +97,7 @@ void StatisticsWidget::paint_statistics(QFileInfo info)
     ui->typesDistribution->setRenderHint(QPainter::Antialiasing);
 }
 
-void StatisticsWidget::setup_cloud_drives()
+void StatisticsWidget::setup_cloud_drives() const
 {
     QList<CloudDrive> drives = CloudDriveUtils::get_supported_drives();
     for (auto drive : drives) {
