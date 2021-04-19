@@ -95,26 +95,14 @@ void SearchWindow::findFiles(QDirIterator &iterator, const QString &text)
         }
     }
     if (!text.isEmpty()) {
-        QProgressDialog progressDialog(this);
-        progressDialog.setCancelButtonText(tr("&Cancel"));
-        progressDialog.setRange(0, files.size());
-        progressDialog.setWindowTitle(tr("Find Files"));
-
         QMimeDatabase mimeDatabase;
         QStringList foundFiles;
 
         for (int i = 0; i < files.size(); ++i) {
-            progressDialog.setValue(i);
-            progressDialog.setLabelText(tr("Searching file number %1 of %n...", nullptr, files.size()).arg(i));
             QCoreApplication::processEvents();
-
-            if (progressDialog.wasCanceled())
-                break;
-
             const QString fileName = files.at(i);
             const QMimeType mimeType = mimeDatabase.mimeTypeForFile(fileName);
             if (mimeType.isValid() && !mimeType.inherits(QStringLiteral("text/plain"))) {
-                qWarning() << "Not searching binary file " << QDir::toNativeSeparators(fileName);
                 continue;
             }
             QFile file(fileName);
@@ -122,8 +110,6 @@ void SearchWindow::findFiles(QDirIterator &iterator, const QString &text)
                 QString line;
                 QTextStream in(&file);
                 while (!in.atEnd()) {
-                    if (progressDialog.wasCanceled())
-                        break;
                     line = in.readLine();
                     if (line.contains(text, Qt::CaseInsensitive)) {
                         foundFiles << files[i];
