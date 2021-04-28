@@ -1,18 +1,18 @@
 #include "./include/utils/create_unit.h"
 
-void CreationUtils::create_unit(QString text, QString path, bool isFolder)
+QString CreationUtils::create_unit(QString text, QString path, bool isFolder)
 {
     QString absolutePath = path;
     path.append("/");
     path.append(text);
     if (isFolder) {
-        create_folder(text, path, absolutePath);
+        return create_folder(text, path, absolutePath);
     } else {
-        create_file(text, path, absolutePath);
+        return create_file(text, path, absolutePath);
     }
 }
 
-void CreationUtils::create_file(QString text, QString path, QString absolutePath)
+QString CreationUtils::create_file(QString text, QString path, QString absolutePath)
 {
     int counter = 1;
     QFile newFile(path);
@@ -31,9 +31,10 @@ void CreationUtils::create_file(QString text, QString path, QString absolutePath
         newFile.open(QFile::WriteOnly);
     }
     newFile.close();
+    return path;
 }
 
-void CreationUtils::create_folder(QString text, QString path, QString absolutePath)
+QString CreationUtils::create_folder(QString text, QString path, QString absolutePath)
 {
     int counter = 1;
     QDir newFolder(path);
@@ -51,6 +52,29 @@ void CreationUtils::create_folder(QString text, QString path, QString absolutePa
     } else {
         newFolder.mkpath(".");
     }
+    return path;
+}
+
+void CreationUtils::create_folder_from_files(QString path) {
+    for (auto &c_file : copiedFiles) {
+        QFileInfo copy_info = model_1->fileInfo(c_file);
+        if (copy_info.isDir() && !copy_info.isSymLink()) {
+            CopyPasteUtils::paste_unit(copy_info, path, true);
+        } else {
+            CopyPasteUtils::paste_unit(copy_info, path, false);
+        }
+        if (to_cut) {
+            if (model_1->fileInfo(c_file).isDir() && !model_1->fileInfo(c_file).isSymLink()) {
+                QDir dir(model_1->fileInfo(c_file).absoluteFilePath());
+                dir.removeRecursively();
+            } else {
+                QFile file(model_1->fileInfo(c_file).absoluteFilePath());
+                file.remove();
+            }
+        }
+    }
+    to_cut = false;
+    copiedFiles.clear();
 }
 
 QString CreationUtils::prepare_path(QString path, QString text, int counter)

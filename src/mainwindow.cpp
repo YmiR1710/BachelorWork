@@ -311,9 +311,17 @@ void MainWindow::create_folder()
                                          "", &result);
     if (result) {
         if (active_panel == Panel::PANEL_1) {
-            CreationUtils::create_unit(text, ui->lineEdit_1->text(), true);
+            QString created = CreationUtils::create_unit(text, ui->lineEdit_1->text(), true);
+            if (chosenFiles.size() > 1) {
+                cut_file();
+                CreationUtils::create_folder_from_files(created);
+            }
         } else if (active_panel == Panel::PANEL_2) {
-            CreationUtils::create_unit(text, ui->lineEdit_2->text(), true);
+            QString created = CreationUtils::create_unit(text, ui->lineEdit_2->text(), true);
+            if (chosenFiles.size() > 1) {
+                cut_file();
+                CreationUtils::create_folder_from_files(created);
+            }
         }
     }
 }
