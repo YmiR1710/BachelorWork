@@ -231,6 +231,7 @@ void MainWindow::get_properties()
     properties_window->setText(properties->toString());
     properties_window->setFixedHeight(this->height() / 2);
     properties_window->setFixedWidth(this->width() / 4);
+    properties_window->setAttribute(Qt::WA_DeleteOnClose);
     this->setCursor(QCursor(Qt::ArrowCursor));
     layout->addWidget(properties_window, 0, 0);
     layout->addWidget(button);
@@ -462,6 +463,7 @@ void MainWindow::show_favorite_paths()
     window->setFixedHeight(this->height() / 2);
     window->setFixedWidth(this->width() / 4);
     window->setWindowTitle("Favorites");
+    window->setAttribute(Qt::WA_DeleteOnClose);
     window->show();
 }
 
@@ -531,6 +533,7 @@ void MainWindow::show_search_window() {
     window->setCentralWidget(search);
     window->setFixedHeight(this->height() / 2);
     window->setFixedWidth(this->width() / 4);
+    window->setAttribute(Qt::WA_DeleteOnClose);
     window->show();
 }
 
@@ -559,6 +562,7 @@ void MainWindow::list_view_init(QTableView *tableView, QFileSystemModel *model)
     tableView->verticalHeader()->setVisible(false);
     tableView->setContextMenuPolicy(Qt::CustomContextMenu);
     tableView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    tableView->setDragDropMode(QAbstractItemView::DragDrop);
     tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tableView->horizontalHeader()->setStretchLastSection(true);
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
