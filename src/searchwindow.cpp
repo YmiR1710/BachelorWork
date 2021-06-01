@@ -12,6 +12,17 @@ static inline void openFile(const QString &fileName)
     QDesktopServices::openUrl(QUrl::fromLocalFile(fileName));
 }
 
+SearchWindow::~SearchWindow()
+{
+    QLayoutItem *item;
+    while ( ( item = mainLayout->takeAt( 0 ) ) != NULL )
+    {
+        delete item->widget();
+        delete item;
+    }
+    delete mainLayout;
+}
+
 SearchWindow::SearchWindow(QWidget *parent)
     : QWidget(parent)
 {
@@ -33,7 +44,7 @@ SearchWindow::SearchWindow(QWidget *parent)
 
     createFilesTable();
 
-    QGridLayout *mainLayout = new QGridLayout(this);
+    mainLayout = new QGridLayout(this);
     mainLayout->addWidget(new QLabel(tr("Named:")), 0, 0);
     mainLayout->addWidget(fileComboBox, 0, 1, 1, 2);
     mainLayout->addWidget(new QLabel(tr("Containing text:")), 1, 0);

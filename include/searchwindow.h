@@ -19,6 +19,7 @@ class SearchWindow : public QWidget
 
 public:
     SearchWindow(QWidget *parent = nullptr);
+    ~SearchWindow();
 
 private slots:
     void find();
@@ -37,7 +38,7 @@ private:
     QLabel *filesFoundLabel;
     QPushButton *findButton;
     QTableWidget *filesTable;
-
+    QGridLayout *mainLayout;
     QDir currentDir;
 };
 
